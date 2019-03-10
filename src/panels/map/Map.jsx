@@ -12,7 +12,16 @@ const pathCoordinates = [
 const Map = withScriptjs(withGoogleMap((props) =>
     <GoogleMap
         defaultZoom={props.zoom}
-        defaultCenter={props.center}>
+        defaultCenter={props.center}
+        defaultOptions={{
+            streetViewControl: false,
+            scaleControl: false,
+            mapTypeControl: false,
+            panControl: false,
+            zoomControl: false,
+            rotateControl: false,
+            fullscreenControl: false
+        }}>
         <Marker position={{lat: 55.45, lng: 37.37}}/>
         <Marker position={{lat: 48.50, lng: 2.20}}/>
         <Polyline

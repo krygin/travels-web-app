@@ -3,21 +3,29 @@ import connect from '@vkontakte/vkui-connect';
 import {View} from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 
-import Home from './panels/Home';
-import Persik from './panels/Persik';
-import MapPanel from "./panels/map/MapPanel";
+import Icon28SearchOutline from '@vkontakte/icons/dist/28/search_outline';
+import Icon28AddOutline from '@vkontakte/icons/dist/28/add_outline';
+import Icon28More from '@vkontakte/icons/dist/28/more';
+import Icon28Place from '@vkontakte/icons/dist/28/place';
+import {Epic, Tabbar, TabbarItem} from "@vkontakte/vkui";
+import JourneysListPanel from "./panels/journeys/JourneysListPanel";
+import JourneysCreatePanel from "./panels/journeys/JourneysCreatePanel";
+import JourneysMapPanel from "./panels/journeys/JourneysMapPanel";
+import Persik from "./panels/Persik";
 
 class App extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            activePanel: "map",
+            activeStory: "journeys_list",
             fetchedUser: null,
         };
+        this.onStoryChange = this.onStoryChange.bind(this);
     }
 
     componentDidMount() {
+        connect.send("VKWebAppInit", {});
         connect.subscribe((e) => {
             switch (e.detail.type) {
                 case 'VKWebAppGetUserInfoResult':
@@ -30,17 +38,51 @@ class App extends React.Component {
         connect.send('VKWebAppGetUserInfo', {});
     }
 
-    go = (e) => {
-        this.setState({activePanel: e.currentTarget.dataset.to})
-    };
+
+    onStoryChange(e) {
+        this.setState({activeStory: e.currentTarget.dataset.story})
+    }
 
     render() {
         return (
-            <View activePanel={this.state.activePanel}>
-                <Home id="home" fetchedUser={this.state.fetchedUser} go={this.go}/>
-                <Persik id="persik" go={this.go}/>
-                <MapPanel id="map" go={this.go}/>
-            </View>
+            <Epic activeStory={this.state.activeStory} tabbar={
+                <Tabbar>
+                    <TabbarItem
+                        onClick={this.onStoryChange}
+                        selected={this.state.activeStory === "journeys_list"}
+                        data-story="journeys_list"
+                        text="Путешествия"><Icon28SearchOutline/></TabbarItem>
+                    <TabbarItem
+                        onClick={this.onStoryChange}
+                        selected={this.state.activeStory === "journeys_create"}
+                        data-story="journeys_create"
+                        text="Создать"><Icon28AddOutline/></TabbarItem>
+                    <TabbarItem
+                        onClick={this.onStoryChange}
+                        selected={this.state.activeStory === "journeys_map"}
+                        data-story="journeys_map"
+                        text="Карта"><Icon28Place/></TabbarItem>
+                    <TabbarItem
+                        onClick={this.onStoryChange}
+                        selected={this.state.activeStory === "more"}
+                        data-story="more"
+                        text="Еще"><Icon28More/></TabbarItem>
+                </Tabbar>
+            }>
+                <View id="journeys_list" activePanel="journeys_list">
+                    <JourneysListPanel id="journeys_list"/>
+                </View>
+                <View id="journeys_create" activePanel="journeys_create">
+                    <JourneysCreatePanel id="journeys_create"/>
+                </View>
+                <View id="journeys_map" activePanel="journeys_map">
+                    <JourneysMapPanel id="journeys_map"/>
+                </View>
+                <View id="more" activePanel="more">
+                    <Persik id="more" go={() => {
+                    }}/>
+                </View>
+            </Epic>
         );
     }
 }

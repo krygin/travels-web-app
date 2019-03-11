@@ -11,7 +11,7 @@ import {Epic, Tabbar, TabbarItem} from "@vkontakte/vkui";
 import JourneysListPanel from "./panels/journeys/JourneysListPanel";
 import JourneysCreatePanel from "./panels/journeys/JourneysCreatePanel";
 import JourneysMapPanel from "./panels/journeys/JourneysMapPanel";
-import Persik from "./panels/Persik";
+import {HeaderButton, Panel, PanelHeader} from "@vkontakte/vkui";
 
 class App extends React.Component {
     constructor(props) {
@@ -79,8 +79,11 @@ class App extends React.Component {
                     <JourneysMapPanel id="journeys_map"/>
                 </View>
                 <View id="more" activePanel="more">
-                    <Persik id="more" go={() => {
-                    }}/>
+                    <Panel id={"more"}>
+                        <PanelHeader
+                            left={<HeaderButton>Куку</HeaderButton>}
+                            right={<HeaderButton>Test</HeaderButton>}>More</PanelHeader>
+                    </Panel>
                 </View>
             </Epic>
         );

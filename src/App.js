@@ -11,13 +11,24 @@ import {Epic, Tabbar, TabbarItem} from "@vkontakte/vkui";
 import JourneysListPanel from "./panels/journeys/JourneysListPanel";
 import JourneysCreatePanel from "./panels/journeys/JourneysCreatePanel";
 import JourneysMapPanel from "./panels/journeys/JourneysMapPanel";
-import {HeaderButton, Panel, PanelHeader} from "@vkontakte/vkui";
+import Icon24Back from '@vkontakte/icons/dist/24/back';
+import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
+import {HeaderButton, Panel, PanelHeader, platform, IOS, Div} from "@vkontakte/vkui";
+import "react-image-gallery/styles/css/image-gallery.css";
+
+
+import ImageGallery from 'react-image-gallery';
+
+
+const osname = platform();
+
 
 class App extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            activeJourneysPanel: "list",
             activeStory: "journeys_list",
             fetchedUser: null,
         };
@@ -69,8 +80,45 @@ class App extends React.Component {
                         text="Еще"><Icon28More/></TabbarItem>
                 </Tabbar>
             }>
-                <View id="journeys_list" activePanel="journeys_list">
-                    <JourneysListPanel id="journeys_list"/>
+                <View id="journeys_list" activePanel={this.state.activeJourneysPanel}>
+                    <JourneysListPanel id="list" onItemClick={() => {
+                        let state = this.state;
+                        state["activeJourneysPanel"] = "details";
+                        this.setState(state)
+                    }}/>
+                    <Panel id="details">
+                        <PanelHeader
+                            addon={<HeaderButton onClick={() => {
+                                let state = this.state;
+                                state["activeJourneysPanel"] = "list";
+                                this.setState(state)
+                            }}>Назад</HeaderButton>}
+                            left={<HeaderButton onClick={() => {
+                                let state = this.state;
+                                state["activeJourneysPanel"] = "list";
+                                this.setState(state)
+                            }}>{osname === IOS ? <Icon28ChevronBack/> :
+                                <Icon24Back/>}</HeaderButton>}>Путешествие</PanelHeader>
+                        <Div>
+                            <ImageGallery
+                                items={[
+                                    {
+                                        original: "https://www.votpusk.ru/country/ctimages/new/FR01.jpg",
+                                        thumbnail: "https://www.votpusk.ru/country/ctimages/new/FR01.jpg"
+                                    },
+                                    {
+                                        original: "https://s.zagranitsa.com/images/articles/4823/870x486/be5bce1abac2ce76c47d918bf50017a9.jpg?1477669487",
+                                        thumbnail: "https://s.zagranitsa.com/images/articles/4823/870x486/be5bce1abac2ce76c47d918bf50017a9.jpg?1477669487"
+                                    },
+                                    {
+                                        original: "https://frenchparis.ru/wp-content/uploads/frenchparis/2016/06/%D0%92-%D0%9F%D0%B0%D1%80%D0%B8%D0%B6-%D0%BD%D0%B0-%D1%82%D1%80%D0%B8-%D0%B4%D0%BD%D1%8F-2.jpg",
+                                        thumbnail: "https://frenchparis.ru/wp-content/uploads/frenchparis/2016/06/%D0%92-%D0%9F%D0%B0%D1%80%D0%B8%D0%B6-%D0%BD%D0%B0-%D1%82%D1%80%D0%B8-%D0%B4%D0%BD%D1%8F-2.jpg"
+                                    },
+                                ]}
+                                showThumbnails={false}/>
+
+                        </Div>
+                    </Panel>
                 </View>
                 <View id="journeys_create" activePanel="journeys_create">
                     <JourneysCreatePanel id="journeys_create"/>
@@ -81,8 +129,8 @@ class App extends React.Component {
                 <View id="more" activePanel="more">
                     <Panel id={"more"}>
                         <PanelHeader
-                            left={<HeaderButton>Куку</HeaderButton>}
-                            right={<HeaderButton>Test</HeaderButton>}>More</PanelHeader>
+                            addon={<HeaderButton>Назад</HeaderButton>}
+                            left={<HeaderButton>Куку</HeaderButton>}>More</PanelHeader>
                     </Panel>
                 </View>
             </Epic>

@@ -1,7 +1,13 @@
-import React from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types';
-import {Panel, PanelHeader} from "@vkontakte/vkui";
-import {List} from "@vkontakte/vkui";
+import {
+    Panel,
+    PanelHeader,
+    Search,
+    FixedLayout,
+    Button,
+    List,
+} from "@vkontakte/vkui";
 import JourneyCell from "./JourneyCell";
 
 const JourneysListPanel = (props) => (
@@ -9,16 +15,53 @@ const JourneysListPanel = (props) => (
         <PanelHeader>
             Путешествия
         </PanelHeader>
-        <List>
-            <JourneyCell/>
-            <JourneyCell/>
-            <JourneyCell/>
+        <FixedLayout vertical="top">
+            <Search/>
+        </FixedLayout>
+        <List style={{paddingTop: 60}}>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
+            <JourneyCell onClick={props.onItemClick}/>
         </List>
+        <FixedLayout vertical="bottom">
+            <Button style={{
+                display: `block`,
+                marginLeft: `auto`,
+                marginRight: `auto`,
+                marginBottom: `12px`
+            }}>Фильтры</Button>
+        </FixedLayout>
     </Panel>
 );
 
 JourneysListPanel.propTypes = {
     id: PropTypes.string.isRequired,
+    onItemClick: PropTypes.func.isRequired
 };
 
 export default JourneysListPanel

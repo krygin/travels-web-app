@@ -12,7 +12,7 @@ import JourneyCell from "./JourneyCell";
 
 const JourneysListPanel = (props) => (
     <Panel id={props.id}>
-        <PanelHeader>
+        <PanelHeader noShadow>
             Путешествия
         </PanelHeader>
         <FixedLayout vertical="top">

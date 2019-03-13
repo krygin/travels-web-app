@@ -18,7 +18,6 @@ import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import "react-image-gallery/styles/css/image-gallery.css";
 import "./image-gallery.css"
-import Icon24User from '@vkontakte/icons/dist/24/user';
 
 import ImageGallery from 'react-image-gallery';
 

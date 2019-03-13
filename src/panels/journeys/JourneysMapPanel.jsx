@@ -10,10 +10,11 @@ const JourneysMapPanel = props => (
             Поиск путешествия
         </PanelHeader>
 
-        <Map   googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKfYKyZhTA3jkN3Htv23OPmuh93PgY8mM&v=3.exp&libraries=geometry,drawing,places"
-               loadingElement={<div style={{ height: `100%` }} />}
-               containerElement={<div style={{ height: `408px` }} />}
-               mapElement={<div style={{ height: `100%` }} />} />
+        <Map
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKfYKyZhTA3jkN3Htv23OPmuh93PgY8mM&v=3.exp&libraries=geometry,drawing,places"
+            loadingElement={<div style={{height: `100%`}}/>}
+            containerElement={<div style={{height: `calc(100vh - 92px)`}}/>}
+            mapElement={<div style={{height: `100%`  }}/>}/>
     </Panel>
 );
 

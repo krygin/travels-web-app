@@ -27,8 +27,11 @@
     "google-map-react": "^1.1.2",
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
+    "react-dnd": "^7.3.2",
+    "react-dnd-html5-backend": "^7.2.0",
     "react-dom": "^16.8.4",
-    "react-google-maps": "^9.4.5"
+    "react-google-maps": "^9.4.5",
+    "react-tag-input": "^6.4.0"
   },
   "eslintConfig": {
     "extends": "react-app"

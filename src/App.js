@@ -13,7 +13,8 @@ import JourneysCreatePanel from "./panels/journeys/JourneysCreatePanel";
 import JourneysMapPanel from "./panels/journeys/JourneysMapPanel";
 import {HeaderButton, Panel, PanelHeader} from "@vkontakte/vkui";
 import JourneysDetailsPanel from "./panels/journeys/JourneyDetailsPanel";
-
+import {fetchJourneysIfNeeded} from "./journeys/actions";
+import {connect as reduxConnect} from 'react-redux'
 
 class App extends React.Component {
     constructor(props) {
@@ -40,6 +41,9 @@ class App extends React.Component {
             }
         });
         connect.send('VKWebAppGetUserInfo', {});
+
+        const {dispatch} = this.props;
+        dispatch(fetchJourneysIfNeeded())
     }
 
 
@@ -80,11 +84,12 @@ class App extends React.Component {
                             state["activeJourneysPanel"] = "details";
                             this.setState(state)
                         }}/>
-                        <JourneysDetailsPanel id="details" journeyId={this.state.activeJourneyId} onBackClick={() => {
-                            let state = this.state;
-                            state["activeJourneysPanel"] = "list";
-                            this.setState(state)
-                        }}/>
+                        <JourneysDetailsPanel id="details" journeyId={this.state.activeJourneyId}
+                                              onBackClick={() => {
+                                                  let state = this.state;
+                                                  state["activeJourneysPanel"] = "list";
+                                                  this.setState(state)
+                                              }}/>
                     </View>
                     <View id="journeys_create" activePanel="journeys_create">
                         <JourneysCreatePanel id="journeys_create"/>
@@ -107,4 +112,17 @@ class App extends React.Component {
     }
 }
 
-export default App;
+
+function mapStateToProps(state) {
+    const {journeys, isFetching} = state || {
+        isFetching: true,
+        journeys: []
+    };
+
+    return {
+        journeys,
+        isFetching
+    }
+}
+
+export default reduxConnect(mapStateToProps)(App);

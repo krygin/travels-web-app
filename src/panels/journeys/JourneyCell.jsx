@@ -6,7 +6,7 @@ import {Cell} from "@vkontakte/vkui";
 const JourneyCell = props => (
     <Cell
         onClick={props.onClick}
-        before={<img
+        before={<img alt={""}
             style={{height: `48px`, width: `64px`, marginTop: `12px`, marginRight: `12px`, borderRadius: `4px`}}
             src="https://cdn.civitatis.com/italia/verona/galeria/verona-vista-aerea.jpg"/>}
         size={"l"}

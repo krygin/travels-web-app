@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types';
 import {
     Panel,
@@ -156,7 +156,7 @@ const JourneysDetailsPanel = (props) => (
 
 JourneysDetailsPanel.propTypes = {
     id: PropTypes.string.isRequired,
-    journeyId: PropTypes.string.isRequired,
+    journeyId: PropTypes.string,
     onBackClick: PropTypes.func.isRequired
 };
 

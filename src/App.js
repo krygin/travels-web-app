@@ -83,7 +83,7 @@ class App extends React.Component {
                             let state = this.state;
                             state["activeJourneysPanel"] = "details";
                             this.setState(state)
-                        }}/>
+                        }} journeys={this.props.journeys}/>
                         <JourneysDetailsPanel id="details" journeyId={this.state.activeJourneyId}
                                               onBackClick={() => {
                                                   let state = this.state;
@@ -114,7 +114,9 @@ class App extends React.Component {
 
 
 function mapStateToProps(state) {
-    const {journeys, isFetching} = state || {
+    const { journeysReducer } = state;
+
+    const {items: journeys, isFetching} = journeysReducer.journeys || {
         isFetching: true,
         journeys: []
     };

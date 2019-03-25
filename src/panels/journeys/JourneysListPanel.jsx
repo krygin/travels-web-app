@@ -19,34 +19,7 @@ const JourneysListPanel = (props) => (
             <Search/>
         </FixedLayout>
         <List style={{paddingTop: 60}}>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
-            <JourneyCell onClick={props.onItemClick}/>
+            {props.journeys && props.journeys.map(journey => <JourneyCell onClick={props.onItemClick} journey={journey} key={journey.id}/>)}
         </List>
         <FixedLayout vertical="bottom">
             <Button style={{
@@ -61,6 +34,7 @@ const JourneysListPanel = (props) => (
 
 JourneysListPanel.propTypes = {
     id: PropTypes.string.isRequired,
+    journeys: PropTypes.array,
     onItemClick: PropTypes.func.isRequired
 };
 

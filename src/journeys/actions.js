@@ -11,7 +11,7 @@ function requestJourneys() {
 function receiveJourneys(json) {
     return {
         type: FETCH_JOURNEYS_SUCCESS,
-        journeys: json.data.children.map(child => child.data),
+        journeys: json.data.children,
     }
 }
 
@@ -25,10 +25,10 @@ function fetchJourneys() {
 }
 
 function shouldFetchJourneys(state) {
-    const posts = state.journeys;
-    if (!posts) {
+    const journeys = state.journeys;
+    if (!journeys) {
         return true
-    } else if (posts.isFetching) {
+    } else if (journeys.isFetching) {
         return false
     } else {
         return true

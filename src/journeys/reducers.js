@@ -6,8 +6,8 @@ import {
 
 function journeys(
     state = {
+        items: [],
         isFetching: false,
-        journeys: []
     },
     action
 ) {
@@ -19,19 +19,22 @@ function journeys(
         case FETCH_JOURNEYS_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
-                journeys: action.journeys
+                items: action.journeys
             });
         default:
             return state
     }
 }
 
-function journeysReducer(state = {}, action) {
+function journeysReducer(
+    state = {},
+    action
+) {
     switch (action.type) {
         case FETCH_JOURNEYS_REQUEST:
         case FETCH_JOURNEYS_SUCCESS:
             return Object.assign({}, state, {
-                [action.subreddit]: journeys(state[action.subreddit], action)
+                journeys: journeys(state.journeys, action)
             });
         default:
             return state
@@ -39,7 +42,7 @@ function journeysReducer(state = {}, action) {
 }
 
 const rootReducer = combineReducers({
-    journeysReducer
+    journeysReducer,
 });
 
 export default rootReducer

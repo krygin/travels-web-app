@@ -19,6 +19,7 @@ const JourneyCell = props => (
 );
 
 JourneyCell.propTypes = {
+    journey: PropTypes.object.isRequired,
     onClick: PropTypes.func.isRequired
 };
 

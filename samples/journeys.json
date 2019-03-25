@@ -2,7 +2,20 @@
   "data": {
     "children": [
       {
-        "title": "abcd"
+        "title": "Франция. Нормандия",
+        "dateFrom": "28 апреля",
+        "dateTo": "5 мая",
+        "budget": "40 000 \u20BD",
+        "capacity": "8 человек",
+        "thumbnailUrl": "https://cdn.civitatis.com/italia/verona/galeria/verona-vista-aerea.jpg"
+      },
+      {
+        "title": "Франция. Нормандия",
+        "dateFrom": "28 апреля",
+        "dateTo": "5 мая",
+        "budget": "40 000 \u20BD",
+        "capacity": "8 человек",
+        "thumbnailUrl": "https://cdn.civitatis.com/italia/verona/galeria/verona-vista-aerea.jpg"
       }
     ]
   }

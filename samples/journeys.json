@@ -2,6 +2,7 @@
   "data": {
     "children": [
       {
+        "id": 1,
         "title": "Франция. Нормандия",
         "dateFrom": "28 апреля",
         "dateTo": "5 мая",
@@ -10,6 +11,7 @@
         "thumbnailUrl": "https://cdn.civitatis.com/italia/verona/galeria/verona-vista-aerea.jpg"
       },
       {
+        "id": 2,
         "title": "Франция. Нормандия",
         "dateFrom": "28 апреля",
         "dateTo": "5 мая",

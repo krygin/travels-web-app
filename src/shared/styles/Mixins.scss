@@ -1,0 +1,25 @@
+@mixin icon-style {
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+@mixin align-icon-style {
+  vertical-align: middle;
+  top: -0.2rem;
+  position: relative;
+}
+
+@mixin retina($density: 2) {
+  /* Retina
+  --------------------------------------- */
+  @media only screen and (-webkit-min-device-pixel-ratio: $density),
+  only screen and (min--moz-device-pixel-ratio: $density),
+  only screen and (-o-min-device-pixel-ratio: #{$density}/1),
+  only screen and (min-device-pixel-ratio: $density),
+  only screen and (min-resolution: 192dpi),
+  only screen and (min-resolution: $density dppx) {
+    @content;
+  }
+}

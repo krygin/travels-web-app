@@ -1,0 +1,18 @@
+$markerWidth: 4.9rem;
+$markerHeight: 6.4rem;
+
+$originX: $markerWidth * .5;
+$originY: $markerHeight;
+
+.simple-marker {
+  background-image: url('./img/ic-map.svg');
+  position: absolute;
+  cursor: pointer;
+  width: $markerWidth;
+  height: $markerHeight;
+  top: -$originY;
+  left: -$originX;
+  transform-origin: $originX $originY;
+  margin: 0;
+  padding: 0;
+}

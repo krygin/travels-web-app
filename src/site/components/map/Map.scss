@@ -1,0 +1,13 @@
+$markerWidth: 4.9rem;
+$markerHeight: 6.4rem;
+
+$originX: $markerWidth * .5;
+$originY: $markerHeight;
+
+.b-map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 48px;
+}

@@ -1,0 +1,69 @@
+@import './shared';
+
+@mixin clearfix {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+html, body {
+  height: 100%;
+  font-family: HelveticaNeue, sans-serif;
+  font-weight: normal;
+  font-size: 10px;
+  background-color: #eeeeee;
+  &:after {
+    @include clearfix;
+  }
+}
+
+.clearfix {
+  &:after {
+    @include clearfix;
+  }
+}
+
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+a {
+  color: $darkblue;
+  text-decoration: none;
+}
+
+.b-wrapper {
+  min-width: 80rem;
+
+  &__container {
+    height: 100%;
+  }
+}
+
+.b-hover {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  opacity: 0.6;
+  z-index: 1;
+
+  &_active {
+    opacity: 1;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &_full {
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &_active:hover {
+    opacity: 1;
+  }
+}

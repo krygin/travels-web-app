@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'HelveticaNeue';
+  font-weight: bold;
+  font-style: normal;
+
+  src: url('shared/fonts/helveticaneue/HelveticaNeue-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'HelveticaNeue';
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('shared/fonts/helveticaneue/helveticaneuecyr-roman.woff') format('woff');
+}
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');

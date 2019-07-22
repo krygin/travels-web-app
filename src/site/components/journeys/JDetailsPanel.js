@@ -18,7 +18,7 @@ const mapDispatchToProps = dispatch => ({
   journeyActions: bindActionCreators(journeyActions, dispatch)
 });
 
-class JDetails extends Base {
+class JDetailsPanel extends Base {
   static defaultProps = {
     backCallback: () => {}
   };
@@ -50,4 +50,4 @@ class JDetails extends Base {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(JDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(JDetailsPanel);

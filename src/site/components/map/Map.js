@@ -2,15 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BaseComponent from 'shared/components/Base';
 import GoogleMap from 'google-map-react';
-import { connect } from 'react-redux';
 import SimpleMarker from './markers/SimpleMarker';
 import './Map.scss';
 import config from 'shared/config';
-
-
-const mapStateToProps = state => ({
-    ...state.site.map
-});
 
 
 class Map extends BaseComponent {
@@ -65,4 +59,4 @@ class Map extends BaseComponent {
   }
 }
 
-export default connect(mapStateToProps)(Map);
+export default Map;

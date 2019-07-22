@@ -19,7 +19,7 @@ export const journeyActions = {
 
 const defaultState = {
   isMapLoading: false,
-  mapJourneyIds: [],
+  filteredJourneyIds: [],
   journeys: {}
 };
 
@@ -39,7 +39,7 @@ export const journey = (state = defaultState, action) => {
       return update(state, {
         isMapLoading: {$set: false},
         journeys: {$merge: journeys},
-        mapJourneyIds: {$set: ids}
+        filteredJourneyIds: {$set: ids}
       });
 
     case GET_LIST_ERROR:

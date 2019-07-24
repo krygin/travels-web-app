@@ -5,8 +5,18 @@ import { bindActionCreators } from 'redux';
 import Map from 'site/components/map/Map';
 import { mapActions } from 'site/components/map/redux';
 import { journeyActions } from 'store/entities/journey';
-import { View, ScreenSpinner, Panel } from '@vkontakte/vkui';
+import {
+  Root,
+  View,
+  ScreenSpinner,
+  Panel,
+  PanelHeader,
+  HeaderButton
+} from '@vkontakte/vkui';
+import Icon24Add from '@vkontakte/icons/dist/24/add';
 import JDetails from './JDetails';
+import JCreateView from './JCreateView';
+import './JMap.scss';
 
 
 const mapStateToProps = state => ({
@@ -19,13 +29,17 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class JMap extends Base {
-  static MAP_PANEL = "map";
-  static DETAILS_PANEL = "details";
+  static MAP_PANEL = "JMap_map";
+  static DETAILS_PANEL = "JMap_details";
+
+  static JOURNEYS_VIEW = "JMap_journeys_view";
+  static CREATE_VIEW = "JMap_create_view";
 
   constructor(props) {
     super(props);
 
     this.state = {
+      activeView: JMap.JOURNEYS_VIEW,
       activePanel: JMap.MAP_PANEL,
       currentJourneyId: null
     };
@@ -65,19 +79,37 @@ class JMap extends Base {
     })
   };
 
+  clickAddCallback = () => {
+    this.setState({
+      activeView: JMap.CREATE_VIEW
+    })
+  };
+
   render() {
-    console.log(this.state.currentJourneyId);
     return (
-      <View popout={ this.getPopout() } activePanel={ this.state.activePanel }>
-        <Panel id={ JMap.MAP_PANEL }>
-          <Map clickMarkerCallback={ this.clickMarkerCallback }/>
-        </Panel>
-        <JDetails
-          id={ JMap.DETAILS_PANEL }
-          journeyId={ this.state.currentJourneyId }
-          backCallback={ this.backCallback }
-        />
-      </View>
+      <Root activeView={ this.state.activeView }>
+        <View
+          id={ JMap.JOURNEYS_VIEW }
+          popout={ this.getPopout() }
+          activePanel={ this.state.activePanel }
+        >
+          <Panel id={ JMap.MAP_PANEL }>
+            <div className="b-map">
+              <PanelHeader
+                noShadow
+                left={ <HeaderButton onClick={this.clickAddCallback} key="add"><Icon24Add/></HeaderButton> }
+              >Карта</PanelHeader>
+              <Map clickMarkerCallback={ this.clickMarkerCallback }/>
+            </div>
+          </Panel>
+          <JDetails
+            id={ JMap.DETAILS_PANEL }
+            journeyId={ this.state.currentJourneyId }
+            backCallback={ this.backCallback }
+          />
+        </View>
+        <JCreateView id={ JMap.CREATE_VIEW }/>
+      </Root>
     );
   }
 }

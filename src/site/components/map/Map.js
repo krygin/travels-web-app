@@ -4,7 +4,6 @@ import BaseComponent from 'shared/components/Base';
 import GoogleMap from 'google-map-react';
 import { connect } from 'react-redux';
 import SimpleMarker from './markers/SimpleMarker';
-import './Map.scss';
 import config from 'shared/config';
 
 
@@ -50,17 +49,15 @@ class Map extends BaseComponent {
     );
 
     return (
-      <div className="b-map">
-        <GoogleMap
-            defaultCenter={ defaultProps.center }
-            defaultZoom={ defaultProps.zoom }
-            options={ defaultOptions }
-            center={ this.props.center }
-            bootstrapURLKeys={{ key: config.googleKey }}
-        >
-          { markers }
-        </GoogleMap>
-      </div>
+      <GoogleMap
+        defaultCenter={defaultProps.center}
+        defaultZoom={defaultProps.zoom}
+        options={defaultOptions}
+        center={this.props.center}
+        bootstrapURLKeys={{key: config.googleKey, libraries: 'places'}}
+      >
+        {markers}
+      </GoogleMap>
     );
   }
 }

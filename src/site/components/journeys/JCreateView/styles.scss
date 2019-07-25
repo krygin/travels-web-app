@@ -1,0 +1,27 @@
+.react-calendar {
+  &.b-calendar {
+    margin: 20px auto;
+    background: inherit;
+    border: none;
+    font-size: 16px;
+  }
+
+  & &__navigation__label {
+    font-size: 16px;
+    font-weight: bold;
+
+    &:hover {
+      background-color: inherit !important;
+    }
+  }
+
+  & &__navigation__arrow {
+    &:hover {
+      background-color: inherit !important;
+    }
+  }
+
+  & &__tile {
+    font-size: 14px;
+  }
+}

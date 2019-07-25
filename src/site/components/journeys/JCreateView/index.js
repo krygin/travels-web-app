@@ -2,6 +2,7 @@ import React from 'react';
 import Base from 'shared/components/Base';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import './styles.scss';
 
 import {mapActions} from 'site/components/map/redux';
 import {
@@ -21,8 +22,11 @@ import {
   HeaderButton
 } from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
+import Icon24BrowserBack from '@vkontakte/icons/dist/24/browser_back';
+import Icon24BrowserForward from '@vkontakte/icons/dist/24/browser_forward';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import GeoInputPanel from 'site/components/journeys/GeoInputPanel';
+import Calendar from 'react-calendar'
 
 
 const mapStateToProps = state => ({
@@ -39,6 +43,7 @@ const mapDispatchToProps = dispatch => ({
 class JCreateView extends Base {
   static MAIN_PANEL = 'JCreate_main';
   static GEOINPUT_PANEL = 'JCreate_geoinput';
+  static CALENDAR_PANEL = 'JCreate_calendar';
 
   constructor(props) {
     super(props);
@@ -68,6 +73,40 @@ class JCreateView extends Base {
     return this.props.jCreate.point.description;
   };
 
+  openCalendarPanel = () => {
+    this.setState({
+      activePanel: JCreateView.CALENDAR_PANEL,
+    })
+  };
+
+  closeCalendarPanel = selectedValue => {
+    console.log(selectedValue);
+    this.setState({
+      activePanel: JCreateView.MAIN_PANEL,
+    });
+    if (selectedValue) {
+      this.props.jCreateActions.updateBody({ dates: selectedValue });
+    }
+  };
+
+  static convertDateToString(value) {
+    let mm = value.getMonth() + 1; // getMonth() is zero-based
+    mm = (mm > 9 ? '' : '0') + mm;
+
+    let dd = value.getDate();
+    dd = (dd > 9 ? '' : '0') + dd;
+
+    return `${dd}.${mm}.${value.getFullYear()}`;
+  };
+
+  convertDates = () => {
+    const dates = this.props.jCreate.dates;
+    if (!dates) { return ''; }
+    const begin = JCreateView.convertDateToString(dates[0]);
+    const end = JCreateView.convertDateToString(dates[1]);
+    return `${begin} - ${end}`;
+  };
+
   render() {
     const osname = platform();
 
@@ -88,10 +127,15 @@ class JCreateView extends Base {
           <FormLayout>
             <Input
               readOnly
-              selected
               placeholder="Выберите место"
               value={ this.getPointDescription() }
               onClick={ this.openGeoInputPanel }
+            />
+            <Input
+              readOnly
+              placeholder="Укажите дату"
+              value={ this.convertDates() }
+              onClick={ this.openCalendarPanel }
             />
             <Textarea placeholder="Описание"/>
             <Button size="xl">Создать</Button>
@@ -102,6 +146,29 @@ class JCreateView extends Base {
           onSuggestSelectedCallback={ this.closeGeoInputPanel }
           onCancelCallback={ this.closeGeoInputPanel }
         />
+        <Panel id={ JCreateView.CALENDAR_PANEL }>
+          <PanelHeader
+            left={
+              <HeaderButton onClick={ () => this.closeCalendarPanel() }>
+                {osname === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
+              </HeaderButton>
+            }
+            addon={
+              <HeaderButton onClick={ () => this.closeCalendarPanel() }>Назад</HeaderButton>}
+          >
+            Даты (от - до)
+          </PanelHeader>
+          <Calendar
+            className="b-calendar"
+            selectRange={true}
+            prev2Label={null}
+            next2Label={null}
+            prevLabel={<Icon24BrowserBack/>}
+            nextLabel={<Icon24BrowserForward/>}
+            onChange={ this.closeCalendarPanel }
+            value={ this.props.jCreate.dates }
+          />
+        </Panel>
       </View>
     )
   }

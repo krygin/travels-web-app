@@ -14,6 +14,7 @@ export const actions = {
 
 const defaultState = {
   point: null,
+  dates: null,
   description: null
 };
 

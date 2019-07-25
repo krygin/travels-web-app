@@ -6,6 +6,10 @@ export const GET_LIST = 'GET_JOURNEY_LIST';
 export const GET_LIST_SUCCESS = 'GET_JOURNEY_LIST_SUCCESS';
 export const GET_LIST_ERROR = 'GET_JOURNEY_LIST_ERROR';
 
+export const CREATE = 'GET_JOURNEY_CREATE';
+export const CREATE_SUCCESS = 'GET_JOURNEY_CREATE_SUCCESS';
+export const CREATE_ERROR = 'GET_JOURNEY_CREATE_ERROR';
+
 export const getJourneyList = () => ({
   [CALL_API]: {
     endpoint: conf.journeyList,
@@ -13,8 +17,23 @@ export const getJourneyList = () => ({
   }
 });
 
+export const createJourney = (positionId, beginDate, endDate, description) => ({
+  [CALL_API]: {
+    endpoint: conf.journeyCreate,
+    method: 'POST',
+    body: {
+      route_item: positionId,
+      begin_date: beginDate,
+      endDate: endDate,
+      description: description
+    },
+    types: [CREATE, CREATE_SUCCESS, CREATE_ERROR]
+  }
+});
+
 export const journeyActions = {
-  getJourneyList
+  getJourneyList,
+  createJourney
 };
 
 const defaultState = {
@@ -32,7 +51,7 @@ export const journey = (state = defaultState, action) => {
 
     case GET_LIST_SUCCESS:
       const journeys = {};
-      const ids = action.payload.list.map(item => {
+      const ids = action.payload.map(item => {
         journeys[item.id] = item;
         return item.id;
       });
@@ -45,6 +64,12 @@ export const journey = (state = defaultState, action) => {
     case GET_LIST_ERROR:
       return update(state, {
         isMapLoading: {$set: false}
+      });
+
+    case CREATE_SUCCESS:
+      return update(state, {
+        journeys: {$merge: { [action.payload.id]: action.payload }},
+        mapJourneyIds: {$push: [action.payload.id]}
       });
 
     default: {

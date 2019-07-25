@@ -15,7 +15,7 @@ export const actions = {
 const defaultState = {
   point: null,
   dates: null,
-  description: null
+  description: ''
 };
 
 export const reducers = (state = defaultState, action) => {

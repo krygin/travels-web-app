@@ -4,15 +4,15 @@ import BaseComponent from 'shared/components/Base';
 
 import './styles.scss'
 import {
+  ANDROID,
+  Cell,
+  HeaderButton,
+  IOS,
+  List,
   Panel,
   PanelHeader,
   platform,
-  IOS,
-  ANDROID,
-  HeaderButton,
-  Search,
-  List,
-  Cell
+  Search
 } from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
@@ -60,24 +60,7 @@ export default class extends BaseComponent {
     this.setState({
       isLoading: true
     });
-    this.geocoder.geocode({placeId}, (results, status) => {
-      if (status !== this.googleMaps.GeocoderStatus.OK) {
-        this.setState({isLoading: false});
-        return;
-      }
 
-      const gmaps = results[0];
-      const location = gmaps.geometry.location;
-
-      this.setState({
-        isLoading: false,
-        place: {
-          lat: location.lat(),
-          lng: location.lng(),
-          address: gmaps.formatted_address
-        }
-      });
-    });
   }
 
   getPlacePredictions = value => {
@@ -94,7 +77,6 @@ export default class extends BaseComponent {
     };
 
     this.autocompleteService.getPlacePredictions(options, suggests => {
-      console.log(suggests);
       this.setState({
         list: suggests || []
       });
@@ -102,7 +84,17 @@ export default class extends BaseComponent {
   };
 
   onSuggestSelectedCallback = suggest => () => {
-    this.props.onSuggestSelectedCallback(suggest);
+    // todo loader
+    const placeId = suggest.place_id;
+    this.geocoder.geocode({placeId}, (results, status) => {
+      if (status !== this.googleMaps.GeocoderStatus.OK) {
+        return;
+      }
+      const gmaps = results[0];
+      const location = gmaps.geometry.location;
+      suggest.location = {lat: location.lat(), lng: location.lng()};
+      this.props.onSuggestSelectedCallback(suggest);
+    });
   };
 
   render() {

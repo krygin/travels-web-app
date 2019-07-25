@@ -1,14 +1,14 @@
 export default {
   googleKey: 'AIzaSyDKfYKyZhTA3jkN3Htv23OPmuh93PgY8mM',
 
-  syncRoot: '/sync/api/',
-  asyncRoot: '/async/api/',
+  root: '/api/',
 
   current: 'user',
 
-  journeyCreate: 'journey.create',
+  journeyCreate: 'journey/create',
   journeyDetails: 'journey.details',
   journeyList: 'journey/list',
+  geoPositionCreate: 'geo/position_create',
 
   clusterList: 'cluster.list',
 

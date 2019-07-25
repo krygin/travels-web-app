@@ -2,9 +2,11 @@ import React from 'react';
 import Base from 'shared/components/Base';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {convertDateToString} from 'shared/utils/helpers';
 import './styles.scss';
 
 import {mapActions} from 'site/components/map/redux';
+import {actions as geoActions} from 'store/entities/geo';
 import {
   actions as jCreateActions
 } from 'site/components/journeys/JCreateView/redux';
@@ -37,7 +39,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   mapActions: bindActionCreators(mapActions, dispatch),
   journeyActions: bindActionCreators(journeyActions, dispatch),
-  jCreateActions: bindActionCreators(jCreateActions, dispatch)
+  jCreateActions: bindActionCreators(jCreateActions, dispatch),
+  geoActions: bindActionCreators(geoActions, dispatch)
 });
 
 class JCreateView extends Base {
@@ -80,7 +83,6 @@ class JCreateView extends Base {
   };
 
   closeCalendarPanel = selectedValue => {
-    console.log(selectedValue);
     this.setState({
       activePanel: JCreateView.MAIN_PANEL,
     });
@@ -89,22 +91,30 @@ class JCreateView extends Base {
     }
   };
 
-  static convertDateToString(value) {
-    let mm = value.getMonth() + 1; // getMonth() is zero-based
-    mm = (mm > 9 ? '' : '0') + mm;
-
-    let dd = value.getDate();
-    dd = (dd > 9 ? '' : '0') + dd;
-
-    return `${dd}.${mm}.${value.getFullYear()}`;
-  };
-
   convertDates = () => {
     const dates = this.props.jCreate.dates;
     if (!dates) { return ''; }
-    const begin = JCreateView.convertDateToString(dates[0]);
-    const end = JCreateView.convertDateToString(dates[1]);
+    const begin = convertDateToString(dates[0]);
+    const end = convertDateToString(dates[1]);
     return `${begin} - ${end}`;
+  };
+
+  changeDescription = e => {
+    this.props.jCreateActions.updateBody({ description: e.target.value });
+  };
+
+  create = async () => {
+    const point = this.props.jCreate.point;
+    let res = await this.props.geoActions.createPosition(
+      point.location, point.place_id, point.description
+    );
+    const dates = this.props.jCreate.dates;
+    const begin = convertDateToString(dates[0], true);
+    const end = convertDateToString(dates[1], true);
+    const description = this.props.jCreate.description;
+    await this.props.journeyActions.createJourney(
+      res.payload.id, begin, end, description
+    );
   };
 
   render() {
@@ -137,8 +147,12 @@ class JCreateView extends Base {
               value={ this.convertDates() }
               onClick={ this.openCalendarPanel }
             />
-            <Textarea placeholder="Описание"/>
-            <Button size="xl">Создать</Button>
+            <Textarea
+              placeholder="Описание"
+              value={ this.props.jCreate.description || '' }
+              onChange={ this.changeDescription }
+            />
+            <Button size="xl" onClick={ this.create }>Создать</Button>
           </FormLayout>
         </Panel>
         <GeoInputPanel

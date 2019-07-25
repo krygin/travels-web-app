@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export function callApi(endpoint, methodType, body, config) {
   const method = methodType.toLowerCase();
-  endpoint = `${conf.syncRoot}${endpoint}`;
+  endpoint = `${conf.root}${endpoint}`;
   return axios[method](endpoint, body, config)
     .then(
       (response) => {

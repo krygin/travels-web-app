@@ -113,3 +113,17 @@ export function reformatUser(user) {
     avatar: inner.profile_image
   };
 }
+
+export function convertDateToString(value, iso) {
+  let mm = value.getMonth() + 1; // getMonth() is zero-based
+  mm = (mm > 9 ? '' : '0') + mm;
+
+  let dd = value.getDate();
+  dd = (dd > 9 ? '' : '0') + dd;
+
+  if (iso) {
+    return `${value.getFullYear()}-${mm}-${dd}`;
+  } else {
+    return `${dd}.${mm}.${value.getFullYear()}`;
+  }
+};

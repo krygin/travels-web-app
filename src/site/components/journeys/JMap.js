@@ -85,6 +85,12 @@ class JMap extends Base {
     })
   };
 
+  showMap = () => {
+    this.setState({
+      activeView: JMap.JOURNEYS_VIEW
+    });
+  };
+
   render() {
     return (
       <Root activeView={ this.state.activeView }>
@@ -108,7 +114,10 @@ class JMap extends Base {
             backCallback={ this.backCallback }
           />
         </View>
-        <JCreateView id={ JMap.CREATE_VIEW }/>
+        <JCreateView
+          id={ JMap.CREATE_VIEW }
+          onFinishCallback={ this.showMap }
+        />
       </Root>
     );
   }

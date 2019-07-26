@@ -15,5 +15,7 @@ export default {
   routeItemCreate: 'route_item.create',
 
   commentList: 'comment.list',
-  commentCreate: 'comment.create'
+  commentCreate: 'comment.create',
+
+  fatalError: 'Что-то пошло не так ((('
 };

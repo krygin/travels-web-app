@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import Base from 'shared/components/Base';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {convertDateToString} from 'shared/utils/helpers';
 import './styles.scss';
+import config from 'shared/config';
 
 import {mapActions} from 'site/components/map/redux';
 import {actions as geoActions} from 'store/entities/geo';
@@ -21,14 +23,17 @@ import {
   Button,
   platform,
   IOS,
-  HeaderButton
+  HeaderButton,
+  Spinner,
+  FormStatus
 } from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon24BrowserBack from '@vkontakte/icons/dist/24/browser_back';
 import Icon24BrowserForward from '@vkontakte/icons/dist/24/browser_forward';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import GeoInputPanel from 'site/components/journeys/GeoInputPanel';
-import Calendar from 'react-calendar'
+import Calendar from 'react-calendar';
+import MilestonesPanel from 'site/components/journeys/MilestonesPanel';
 
 
 const mapStateToProps = state => ({
@@ -47,11 +52,22 @@ class JCreateView extends Base {
   static MAIN_PANEL = 'JCreate_main';
   static GEOINPUT_PANEL = 'JCreate_geoinput';
   static CALENDAR_PANEL = 'JCreate_calendar';
+  static MILESTONES_PANEL = 'JCreate_milestones';
+
+  static defaultProps = {
+    onFinishCallback: () => {}
+  };
+
+  static propTypes = {
+    onFinishCallback: PropTypes.func
+  };
 
   constructor(props) {
     super(props);
 
     this.state = {
+      isLoading: false,
+      error: null,
       activePanel: JCreateView.MAIN_PANEL,
     };
   }
@@ -67,12 +83,14 @@ class JCreateView extends Base {
       activePanel: JCreateView.MAIN_PANEL,
     });
     if (selectedValue) {
-      this.props.jCreateActions.updateBody({ point: selectedValue });
+      this.props.jCreateActions.updateBody({point: selectedValue});
     }
   };
 
   getPointDescription = () => {
-    if (!this.props.jCreate.point) { return ''; }
+    if (!this.props.jCreate.point) {
+      return '';
+    }
     return this.props.jCreate.point.description;
   };
 
@@ -87,42 +105,91 @@ class JCreateView extends Base {
       activePanel: JCreateView.MAIN_PANEL,
     });
     if (selectedValue) {
-      this.props.jCreateActions.updateBody({ dates: selectedValue });
+      this.props.jCreateActions.updateBody({dates: selectedValue});
     }
   };
 
   convertDates = () => {
     const dates = this.props.jCreate.dates;
-    if (!dates) { return ''; }
+    if (!dates) {
+      return '';
+    }
     const begin = convertDateToString(dates[0]);
     const end = convertDateToString(dates[1]);
     return `${begin} - ${end}`;
   };
 
   changeDescription = e => {
-    this.props.jCreateActions.updateBody({ description: e.target.value });
+    this.props.jCreateActions.updateBody({description: e.target.value});
+  };
+
+  validateForm = () => {
+    let error = null;
+    if (!this.props.jCreate.point) {
+      error = 'Выберете, пожалуйста, куда собираетесь ехать';
+    } else if (!this.props.jCreate.dates) {
+      error = 'Выберете, пожалуйста, дату, в которую планируете поездку';
+    }
+    if (error) {
+      this.setState({error});
+    }
+    return error === null;
   };
 
   create = async () => {
+    if (!this.validateForm()) {
+      return;
+    }
+    this.setState({
+      isLoading: true,
+      error: null
+    });
+
     const point = this.props.jCreate.point;
     let res = await this.props.geoActions.createPosition(
       point.location, point.place_id, point.description
     );
+    if (!res.payload) {
+      this.setState({
+        isLoading: false,
+        error: config.fatalError
+      });
+      return;
+    }
+
     const dates = this.props.jCreate.dates;
     const begin = convertDateToString(dates[0], true);
     const end = convertDateToString(dates[1], true);
     const description = this.props.jCreate.description;
-    await this.props.journeyActions.createJourney(
+    res = await this.props.journeyActions.createJourney(
       res.payload.id, begin, end, description
     );
+    if (!res.payload) {
+      this.setState({
+        isLoading: false,
+        error: config.fatalError
+      });
+    }
+
+    this.setState({
+      isLoading: false,
+      activePanel: JCreateView.MILESTONES_PANEL
+    });
+  };
+
+  finish = () => {
+    this.setState({
+      isLoading: false,
+      activePanel: JCreateView.MILESTONES_PANEL
+    });
   };
 
   render() {
     const osname = platform();
 
     return (
-      <View id={this.props.id} activePanel={ this.state.activePanel }>
-        <Panel id={ JCreateView.MAIN_PANEL }>
+      <View id={this.props.id} activePanel={this.state.activePanel}>
+        <Panel id={JCreateView.MAIN_PANEL}>
           <PanelHeader
             left={
               <HeaderButton onClick={this.props.backCallback}>
@@ -130,45 +197,51 @@ class JCreateView extends Base {
               </HeaderButton>
             }
             addon={
-              <HeaderButton onClick={this.props.backCallback}>Назад</HeaderButton>}
+              <HeaderButton
+                onClick={this.props.backCallback}>Назад</HeaderButton>}
           >
             Новое путешествие
           </PanelHeader>
           <FormLayout>
+            { this.state.error &&
+              <FormStatus title="Ошибка" state="error">{ this.state.error }</FormStatus>
+            }
             <Input
               readOnly
               placeholder="Выберите место"
-              value={ this.getPointDescription() }
-              onClick={ this.openGeoInputPanel }
+              value={this.getPointDescription()}
+              onClick={this.openGeoInputPanel}
             />
             <Input
               readOnly
               placeholder="Укажите дату"
-              value={ this.convertDates() }
-              onClick={ this.openCalendarPanel }
+              value={this.convertDates()}
+              onClick={this.openCalendarPanel}
             />
             <Textarea
               placeholder="Описание"
-              value={ this.props.jCreate.description || '' }
-              onChange={ this.changeDescription }
+              value={this.props.jCreate.description || ''}
+              onChange={this.changeDescription}
             />
-            <Button size="xl" onClick={ this.create }>Создать</Button>
+            <Button size="xl" onClick={this.create}>Создать</Button>
+            {this.state.isLoading && <Spinner size="regular"/>}
           </FormLayout>
         </Panel>
         <GeoInputPanel
-          id={ JCreateView.GEOINPUT_PANEL }
-          onSuggestSelectedCallback={ this.closeGeoInputPanel }
-          onCancelCallback={ this.closeGeoInputPanel }
+          id={JCreateView.GEOINPUT_PANEL}
+          onSuggestSelectedCallback={this.closeGeoInputPanel}
+          onCancelCallback={this.closeGeoInputPanel}
         />
-        <Panel id={ JCreateView.CALENDAR_PANEL }>
+        <Panel id={JCreateView.CALENDAR_PANEL}>
           <PanelHeader
             left={
-              <HeaderButton onClick={ () => this.closeCalendarPanel() }>
+              <HeaderButton onClick={() => this.closeCalendarPanel()}>
                 {osname === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
               </HeaderButton>
             }
             addon={
-              <HeaderButton onClick={ () => this.closeCalendarPanel() }>Назад</HeaderButton>}
+              <HeaderButton
+                onClick={() => this.closeCalendarPanel()}>Назад</HeaderButton>}
           >
             Даты (от - до)
           </PanelHeader>
@@ -179,10 +252,14 @@ class JCreateView extends Base {
             next2Label={null}
             prevLabel={<Icon24BrowserBack/>}
             nextLabel={<Icon24BrowserForward/>}
-            onChange={ this.closeCalendarPanel }
-            value={ this.props.jCreate.dates }
+            onChange={this.closeCalendarPanel}
+            value={this.props.jCreate.dates}
           />
         </Panel>
+        <MilestonesPanel
+          id={JCreateView.MILESTONES_PANEL}
+          onSkipCallback={() => this.props.onFinishCallback()}
+        />
       </View>
     )
   }

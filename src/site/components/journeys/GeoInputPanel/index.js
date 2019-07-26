@@ -4,7 +4,6 @@ import BaseComponent from 'shared/components/Base';
 
 import './styles.scss'
 import {
-  ANDROID,
   Cell,
   HeaderButton,
   IOS,
@@ -17,7 +16,6 @@ import {
 } from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
-import Icon24Search from '@vkontakte/icons/dist/24/search';
 
 
 export default class extends BaseComponent {
@@ -105,12 +103,13 @@ export default class extends BaseComponent {
       <Panel id={this.props.id}>
         <PanelHeader
           left={
-            <HeaderButton onClick={ this.props.onCancelCallback }>
+            <HeaderButton onClick={ () => this.props.onCancelCallback() }>
               {osname === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
             </HeaderButton>
           }
-          right={osname === ANDROID &&
-          <HeaderButton onClick={this.toggleSearch}><Icon24Search/></HeaderButton>}
+          addon={
+            <HeaderButton onClick={ () => this.props.onCancelCallback() }>Назад</HeaderButton>
+          }
         >
           Место
         </PanelHeader>

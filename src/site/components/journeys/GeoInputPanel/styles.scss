@@ -1,5 +1,9 @@
 .b-geo-cell {
-  & .Cell__aside {
+  & .Cell__chevron {
     display: none;
   }
+}
+
+.b-geo-spinner {
+  margin: 10px 0;
 }

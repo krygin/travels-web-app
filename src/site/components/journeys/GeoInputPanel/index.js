@@ -12,7 +12,8 @@ import {
   Panel,
   PanelHeader,
   platform,
-  Search
+  Search,
+  Spinner
 } from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
@@ -35,6 +36,7 @@ export default class extends BaseComponent {
 
     this.state = {
       isLoading: false,
+      isLoadingItem: null,
       value: null,
       list: []
     };
@@ -56,13 +58,6 @@ export default class extends BaseComponent {
     this.geocoder = new googleMaps.Geocoder();
   }
 
-  geocode(placeId) {
-    this.setState({
-      isLoading: true
-    });
-
-  }
-
   getPlacePredictions = value => {
     this.setState({
       value
@@ -76,17 +71,23 @@ export default class extends BaseComponent {
       types: ['(cities)']
     };
 
+    const timeout = setTimeout(() => {
+      this.setState({isLoading: true});
+    }, 200);
     this.autocompleteService.getPlacePredictions(options, suggests => {
+      clearTimeout(timeout);
       this.setState({
+        isLoading: false,
         list: suggests || []
       });
     });
   };
 
   onSuggestSelectedCallback = suggest => () => {
-    // todo loader
     const placeId = suggest.place_id;
+    this.setState({isLoadingItem: placeId});
     this.geocoder.geocode({placeId}, (results, status) => {
+      this.setState({isLoadingItem: null});
       if (status !== this.googleMaps.GeocoderStatus.OK) {
         return;
       }
@@ -117,11 +118,16 @@ export default class extends BaseComponent {
           value={ this.state.value || '' }
           onChange={ this.getPlacePredictions }
         />
+        { this.state.isLoading && <Spinner className="b-geo-spinner" size="regular"/> }
         <List>
           {this.state.list.map(item => (
             <Cell
               className="b-geo-cell"
               expandable
+              asideContent={
+                item.place_id === this.state.isLoadingItem ?
+                <Spinner size="regular"/> : null
+              }
               key={item.id}
               onClick={this.onSuggestSelectedCallback(item)}
             >{item.description}</Cell>

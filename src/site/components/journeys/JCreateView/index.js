@@ -10,7 +10,8 @@ import config from 'shared/config';
 import {mapActions} from 'site/components/map/redux';
 import {actions as geoActions} from 'store/entities/geo';
 import {
-  actions as jCreateActions
+  actions as jCreateActions,
+  defaultState as jCreateDefaultState
 } from 'site/components/journeys/JCreateView/redux';
 import {journeyActions} from 'store/entities/journey';
 import {
@@ -171,6 +172,7 @@ class JCreateView extends Base {
       });
     }
 
+    this.props.jCreateActions.updateBody({id: res.payload.id});
     this.setState({
       isLoading: false,
       activePanel: JCreateView.MILESTONES_PANEL
@@ -178,10 +180,9 @@ class JCreateView extends Base {
   };
 
   finish = () => {
-    this.setState({
-      isLoading: false,
-      activePanel: JCreateView.MILESTONES_PANEL
-    });
+    const journeyId = this.props.jCreate.id;
+    this.props.jCreateActions.updateBody(jCreateDefaultState);
+    this.props.onFinishCallback(journeyId)
   };
 
   render() {
@@ -258,7 +259,9 @@ class JCreateView extends Base {
         </Panel>
         <MilestonesPanel
           id={JCreateView.MILESTONES_PANEL}
-          onSkipCallback={() => this.props.onFinishCallback()}
+          journeyId={ this.props.jCreate.id }
+          onSkipCallback={ this.finish }
+          onFinishCallback={ this.finish }
         />
       </View>
     )

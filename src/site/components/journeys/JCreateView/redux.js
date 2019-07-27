@@ -12,7 +12,8 @@ export const actions = {
   updateBody
 };
 
-const defaultState = {
+export const defaultState = {
+  id: 0,
   point: null,
   dates: null,
   description: ''

@@ -10,87 +10,87 @@ import JListPanel from "./JListPanel";
 import JMapPanel from "./JMapPanel";
 
 const mapStateToProps = state => ({
-    journey: state.entities.journey
+  journey: state.entities.journey
 });
 
 const mapDispatchToProps = dispatch => ({
-    journeyActions: bindActionCreators(journeyActions, dispatch)
+  journeyActions: bindActionCreators(journeyActions, dispatch)
 });
 
 
 class JMap extends Base {
-    static MAP_PANEL = "map";
-    static DETAILS_PANEL = "details";
-    static LIST_PANEL = "list";
+  static MAP_PANEL = "map";
+  static DETAILS_PANEL = "details";
+  static LIST_PANEL = "list";
 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            activePanel: JMap.MAP_PANEL,
-            journeys: [],
-            currentJourneyId: null
-        };
+    this.state = {
+      activePanel: JMap.MAP_PANEL,
+      journeys: [],
+      currentJourneyId: null
+    };
+  }
+
+  componentDidMount() {
+    this.props.journeyActions.getJourneyList().then(() => {
+    });
+  }
+
+  getPopout = () => {
+    if (this.props.journey.isMapLoading) {
+      return <ScreenSpinner/>;
     }
+  };
 
-    componentDidMount() {
-        this.props.journeyActions.getJourneyList().then(() => {
-        });
-    }
+  clickMarkerCallback = id => {
+    this.setState({
+      activePanel: JMap.DETAILS_PANEL,
+      currentJourneyId: id
+    })
+  };
 
-    getPopout = () => {
-        if (this.props.journey.isMapLoading) {
-            return <ScreenSpinner/>;
-        }
-    };
+  backCallback = () => {
+    this.setState({
+      activePanel: JMap.MAP_PANEL,
+      currentJourneyId: null
+    })
+  };
 
-    clickMarkerCallback = id => {
-        this.setState({
-            activePanel: JMap.DETAILS_PANEL,
-            currentJourneyId: id
-        })
-    };
+  onListButtonClick = () => {
+    this.setState({
+      activePanel: JMap.LIST_PANEL,
+      currentJourneyId: null
+    })
+  };
 
-    backCallback = () => {
-        this.setState({
-            activePanel: JMap.MAP_PANEL,
-            currentJourneyId: null
-        })
-    };
+  onMapButtonClick = () => {
+    this.setState({
+      activePanel: JMap.MAP_PANEL,
+      currentJourneyId: null
+    })
+  };
 
-    onListButtonClick = () => {
-        this.setState({
-            activePanel: JMap.LIST_PANEL,
-            currentJourneyId: null
-        })
-    };
-
-    onMapButtonClick = () => {
-        this.setState({
-            activePanel: JMap.MAP_PANEL,
-            currentJourneyId: null
-        })
-    };
-
-    render() {
-        console.log(this.state.currentJourneyId);
-        return (
-            <View popout={this.getPopout()} activePanel={this.state.activePanel}>
-                <JMapPanel id={JMap.MAP_PANEL} onItemClick={this.clickMarkerCallback}
-                           onListButtonClick={this.onListButtonClick} journey={{
-                    journeys: [],
-                    filteredJourneyIds: []
-                }}/>
-                <JListPanel id={JMap.LIST_PANEL} onItemClick={this.clickMarkerCallback}
-                            onMapButtonClick={this.onMapButtonClick}/>
-                <JDetailsPanel
-                    id={JMap.DETAILS_PANEL}
-                    journeyId={this.state.currentJourneyId}
-                    backCallback={this.backCallback}
-                />
-            </View>
-        );
-    }
+  render() {
+    console.log(this.state.currentJourneyId);
+    return (
+      <View popout={this.getPopout()} activePanel={this.state.activePanel}>
+        <JMapPanel id={JMap.MAP_PANEL} onItemClick={this.clickMarkerCallback}
+                   onListButtonClick={this.onListButtonClick} journey={{
+          journeys: [],
+          filteredJourneyIds: []
+        }}/>
+        <JListPanel id={JMap.LIST_PANEL} onItemClick={this.clickMarkerCallback}
+                    onMapButtonClick={this.onMapButtonClick}/>
+        <JDetailsPanel
+          id={JMap.DETAILS_PANEL}
+          journeyId={this.state.currentJourneyId}
+          backCallback={this.backCallback}
+        />
+      </View>
+    );
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(JMap);

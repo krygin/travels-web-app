@@ -7,7 +7,6 @@ import {convertDateToString} from 'shared/utils/helpers';
 import './styles.scss';
 import config from 'shared/config';
 
-import {mapActions} from 'site/components/map/redux';
 import {actions as geoActions} from 'store/entities/geo';
 import {
   actions as jCreateActions,
@@ -43,7 +42,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  mapActions: bindActionCreators(mapActions, dispatch),
   journeyActions: bindActionCreators(journeyActions, dispatch),
   jCreateActions: bindActionCreators(jCreateActions, dispatch),
   geoActions: bindActionCreators(geoActions, dispatch)
@@ -193,13 +191,13 @@ class JCreateView extends Base {
         <Panel id={JCreateView.MAIN_PANEL}>
           <PanelHeader
             left={
-              <HeaderButton onClick={this.props.backCallback}>
+              <HeaderButton onClick={() => this.props.onFinishCallback()}>
                 {osname === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
               </HeaderButton>
             }
             addon={
               <HeaderButton
-                onClick={this.props.backCallback}>Назад</HeaderButton>}
+                onClick={() => this.props.onFinishCallback()}>Назад</HeaderButton>}
           >
             Новое путешествие
           </PanelHeader>

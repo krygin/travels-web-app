@@ -2,19 +2,16 @@ import React from 'react';
 import Base from 'shared/components/Base';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Map from 'site/components/map/Map';
-import { mapActions } from 'site/components/map/redux';
 import { journeyActions } from 'store/entities/journey';
+
 import {
   Root,
   View,
-  ScreenSpinner,
-  Panel,
-  PanelHeader,
-  HeaderButton
+  ScreenSpinner
 } from '@vkontakte/vkui';
-import Icon24Add from '@vkontakte/icons/dist/24/add';
-import JDetails from './JDetails';
+import JDetailsPanel from './JDetailsPanel';
+import JListPanel from "./JListPanel";
+import JMapPanel from "./JMapPanel";
 import JCreateView from './JCreateView';
 import './JMap.scss';
 
@@ -24,13 +21,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  mapActions: bindActionCreators(mapActions, dispatch),
   journeyActions: bindActionCreators(journeyActions, dispatch)
 });
+
 
 class JMap extends Base {
   static MAP_PANEL = "JMap_map";
   static DETAILS_PANEL = "JMap_details";
+  static LIST_PANEL = "JMap_list";
 
   static JOURNEYS_VIEW = "JMap_journeys_view";
   static CREATE_VIEW = "JMap_create_view";
@@ -47,25 +45,16 @@ class JMap extends Base {
 
   componentDidMount() {
     this.props.journeyActions.getJourneyList().then(() => {
-      const points = this.props.journey.mapJourneyIds.map(id => {
-        const item = this.props.journey.journeys[id];
-        const routeItem = item.route_item;
-        return {
-          id: id,
-          location: routeItem.point
-        }
-      });
-      this.props.mapActions.setPointList(points);
     });
   }
 
   getPopout = () => {
-    if (this.props.journey.isMapLoading) {
-      return <ScreenSpinner />;
+    if (this.props.journey.isListLoading) {
+      return <ScreenSpinner/>;
     }
   };
 
-  clickMarkerCallback = id => {
+  onItemClick = id => {
     this.setState({
       activePanel: JMap.DETAILS_PANEL,
       currentJourneyId: id
@@ -91,32 +80,53 @@ class JMap extends Base {
     });
   };
 
+  onListButtonClick = () => {
+    this.setState({
+      activePanel: JMap.LIST_PANEL,
+      currentJourneyId: null
+    })
+  };
+
+  onMapButtonClick = () => {
+    this.setState({
+      activePanel: JMap.MAP_PANEL,
+      currentJourneyId: null
+    })
+  };
+
   render() {
+    const journeys = this.props.journey.filteredJourneyIds.map(id => {
+      return this.props.journey.journeys[id];
+    });
     return (
-      <Root activeView={ this.state.activeView }>
+      <Root activeView={this.state.activeView}>
         <View
-          id={ JMap.JOURNEYS_VIEW }
-          popout={ this.getPopout() }
-          activePanel={ this.state.activePanel }
+          id={JMap.JOURNEYS_VIEW}
+          popout={this.getPopout()}
+          activePanel={this.state.activePanel}
         >
-          <Panel id={ JMap.MAP_PANEL }>
-            <div className="b-map">
-              <PanelHeader
-                noShadow
-                left={ <HeaderButton onClick={this.clickAddCallback} key="add"><Icon24Add/></HeaderButton> }
-              >Карта</PanelHeader>
-              <Map clickMarkerCallback={ this.clickMarkerCallback }/>
-            </div>
-          </Panel>
-          <JDetails
-            id={ JMap.DETAILS_PANEL }
-            journeyId={ this.state.currentJourneyId }
-            backCallback={ this.backCallback }
+          <JMapPanel
+            id={JMap.MAP_PANEL}
+            journeys={journeys}
+            onItemClick={this.onItemClick}
+            onListButtonClick={this.onListButtonClick}
+            onAddButtonClick={this.clickAddCallback}
+          />
+          <JDetailsPanel
+            id={JMap.DETAILS_PANEL}
+            journeyId={this.state.currentJourneyId}
+            backCallback={this.backCallback}
+          />
+          <JListPanel
+            id={JMap.LIST_PANEL}
+            journeys={journeys}
+            onItemClick={this.clickMarkerCallback}
+            onMapButtonClick={this.onMapButtonClick}
           />
         </View>
         <JCreateView
-          id={ JMap.CREATE_VIEW }
-          onFinishCallback={ this.showMap }
+          id={JMap.CREATE_VIEW}
+          onFinishCallback={this.showMap}
         />
       </Root>
     );

@@ -54,8 +54,8 @@ export const journeyActions = {
 };
 
 const defaultState = {
-  isMapLoading: false,
-  mapJourneyIds: [],
+  isListLoading: false,
+  filteredJourneyIds: [],
   journeys: {}
 };
 
@@ -63,7 +63,7 @@ export const journey = (state = defaultState, action) => {
   switch (action.type) {
     case GET_LIST:
       return update(state, {
-        isMapLoading: {$set: true}
+        isListLoading: {$set: true}
       });
 
     case GET_LIST_SUCCESS:
@@ -73,20 +73,20 @@ export const journey = (state = defaultState, action) => {
         return item.id;
       });
       return update(state, {
-        isMapLoading: {$set: false},
+        isListLoading: {$set: false},
         journeys: {$merge: journeys},
-        mapJourneyIds: {$set: ids}
+        filteredJourneyIds: {$set: ids}
       });
 
     case GET_LIST_ERROR:
       return update(state, {
-        isMapLoading: {$set: false}
+        isListLoading: {$set: false}
       });
 
     case CREATE_SUCCESS:
       return update(state, {
         journeys: {$merge: { [action.payload.id]: action.payload }},
-        mapJourneyIds: {$push: [action.payload.id]}
+        filteredJourneyIds: {$push: [action.payload.id]}
       });
 
     case UPDATE_MILESTONES_SUCCESS:

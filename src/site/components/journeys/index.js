@@ -3,6 +3,14 @@ import Base from 'shared/components/Base';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { journeyActions } from 'store/entities/journey';
+import {
+  actions as stateActions,
+  DETAILS_PANEL,
+  MAP_PANEL,
+  CREATE_VIEW,
+  JOURNEYS_VIEW,
+  LIST_PANEL
+} from './redux';
 
 import {
   Root,
@@ -13,40 +21,29 @@ import JDetailsPanel from './JDetailsPanel';
 import JListPanel from "./JListPanel";
 import JMapPanel from "./JMapPanel";
 import JCreateView from './JCreateView';
-import './JMap.scss';
+import './styles.scss';
 
 
 const mapStateToProps = state => ({
-  journey: state.entities.journey
+  journey: state.entities.journey,
+  state: state.site.journeys,
 });
 
 const mapDispatchToProps = dispatch => ({
-  journeyActions: bindActionCreators(journeyActions, dispatch)
+  journeyActions: bindActionCreators(journeyActions, dispatch),
+  stateActions: bindActionCreators(stateActions, dispatch),
 });
 
 
-class JMap extends Base {
-  static MAP_PANEL = "JMap_map";
-  static DETAILS_PANEL = "JMap_details";
-  static LIST_PANEL = "JMap_list";
-
-  static JOURNEYS_VIEW = "JMap_journeys_view";
-  static CREATE_VIEW = "JMap_create_view";
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      activeView: JMap.JOURNEYS_VIEW,
-      activePanel: JMap.MAP_PANEL,
-      currentJourneyId: null,
-      mapCenter: null,
-      mapZoom: null
-    };
-  }
-
+class Journeys extends Base {
   componentDidMount() {
-    this.props.journeyActions.getJourneyList();
+    if (!this.props.state.isListLoaded) {
+      this.props.journeyActions.getJourneyList().then(() => {
+        this.props.stateActions.update({
+          isListLoaded: true
+        })
+      });
+    }
   }
 
   getPopout = () => {
@@ -56,28 +53,28 @@ class JMap extends Base {
   };
 
   onItemClick = id => {
-    this.setState({
-      activePanel: JMap.DETAILS_PANEL,
+    this.props.stateActions.update({
+      activePanel: DETAILS_PANEL,
       currentJourneyId: id
     })
   };
 
   backCallback = () => {
-    this.setState({
-      activePanel: JMap.MAP_PANEL,
+    this.props.stateActions.update({
+      activePanel: MAP_PANEL,
       currentJourneyId: null
     })
   };
 
   clickAddCallback = () => {
-    this.setState({
-      activeView: JMap.CREATE_VIEW
+    this.props.stateActions.update({
+      activeView: CREATE_VIEW
     })
   };
 
   showMap = journeyId => {
     const state = {
-      activeView: JMap.JOURNEYS_VIEW
+      activeView: JOURNEYS_VIEW
     };
     if (journeyId) {
       const journey = this.props.journey.journeys[journeyId];
@@ -85,25 +82,25 @@ class JMap extends Base {
       state.mapCenter = routeItem.point;
       state.mapZoom = 6;
     }
-    this.setState(state);
+    this.props.stateActions.update(state);
   };
 
   onListButtonClick = () => {
-    this.setState({
-      activePanel: JMap.LIST_PANEL,
+    this.props.stateActions.update({
+      activePanel: LIST_PANEL,
       currentJourneyId: null
     })
   };
 
   onMapButtonClick = () => {
-    this.setState({
-      activePanel: JMap.MAP_PANEL,
+    this.props.stateActions.update({
+      activePanel: MAP_PANEL,
       currentJourneyId: null
     })
   };
 
   onChangeMap = (center, zoom) => {
-    this.setState({
+    this.props.stateActions.update({
       mapCenter: center,
       mapZoom: zoom
     });
@@ -113,37 +110,39 @@ class JMap extends Base {
     const journeys = this.props.journey.filteredJourneyIds.map(id => {
       return this.props.journey.journeys[id];
     });
+    const state = this.props.state;
+
     return (
-      <Root activeView={this.state.activeView}>
+      <Root activeView={state.activeView}>
         <View
-          id={JMap.JOURNEYS_VIEW}
+          id={JOURNEYS_VIEW}
           popout={this.getPopout()}
-          activePanel={this.state.activePanel}
+          activePanel={state.activePanel}
         >
           <JMapPanel
-            id={JMap.MAP_PANEL}
+            id={MAP_PANEL}
             journeys={journeys}
-            center={this.state.mapCenter}
-            zoom={this.state.mapZoom}
+            center={state.mapCenter}
+            zoom={state.mapZoom}
             onItemClick={this.onItemClick}
             onListButtonClick={this.onListButtonClick}
             onAddButtonClick={this.clickAddCallback}
             onChangeMap={this.onChangeMap}
           />
           <JDetailsPanel
-            id={JMap.DETAILS_PANEL}
-            journeyId={this.state.currentJourneyId}
+            id={DETAILS_PANEL}
+            journeyId={state.currentJourneyId}
             backCallback={this.backCallback}
           />
           <JListPanel
-            id={JMap.LIST_PANEL}
+            id={LIST_PANEL}
             journeys={journeys}
             onItemClick={this.clickMarkerCallback}
             onMapButtonClick={this.onMapButtonClick}
           />
         </View>
         <JCreateView
-          id={JMap.CREATE_VIEW}
+          id={CREATE_VIEW}
           onFinishCallback={this.showMap}
         />
       </Root>
@@ -151,4 +150,4 @@ class JMap extends Base {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(JMap);
+export default connect(mapStateToProps, mapDispatchToProps)(Journeys);

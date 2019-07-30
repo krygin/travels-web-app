@@ -13,7 +13,7 @@ import JourneysListPanel from "../panels/journeys/JourneysListPanel";
 import JourneysCreatePanel from "../panels/journeys/JourneysCreatePanel";
 import { HeaderButton, Panel, PanelHeader } from "@vkontakte/vkui";
 import JourneysDetailsPanel from "../panels/journeys/JourneyDetailsPanel";
-import JMap from "./components/journeys/JMap";
+import Journeys from "./components/journeys";
 import BaseComponent from 'shared/components/Base';
 
 
@@ -95,7 +95,7 @@ export default class extends BaseComponent {
               <View id="journeys_create" activePanel="journeys_create">
                   <JourneysCreatePanel id="journeys_create"/>
               </View>
-              <JMap id="journeys_map"/>
+              <Journeys id="journeys_map"/>
               <View id="more" activePanel="more">
                   <Panel id="more">
                       <PanelHeader

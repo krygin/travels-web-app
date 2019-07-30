@@ -33,8 +33,11 @@ const JMapPanel = (props) => {
       </PanelHeader>
       <div className="b-map">
         <Map
-          clickMarkerCallback={props.onItemClick}
+          center={props.center}
+          zoom={props.zoom}
           points={points}
+          clickMarkerCallback={props.onItemClick}
+          onChange={props.onChangeMap}
         />
       </div>
       <FixedLayout vertical="bottom">
@@ -50,17 +53,23 @@ const JMapPanel = (props) => {
 };
 
 JMapPanel.defaultProps = {
+  center: null,
+  zoom: null,
   onItemClick: () => {},
   onListButtonClick: () => {},
-  onAddButtonClick: () => {}
+  onAddButtonClick: () => {},
+  onChangeMap: () => {}
 };
 
 JMapPanel.propTypes = {
   id: PropTypes.string.isRequired,
   journeys: PropTypes.array.isRequired,
+  center: PropTypes.object,
+  zoom: PropTypes.number,
   onItemClick: PropTypes.func,
   onListButtonClick: PropTypes.func,
   onAddButtonClick: PropTypes.func,
+  onChangeMap: PropTypes.func,
 };
 
 export default JMapPanel;

@@ -39,13 +39,14 @@ class JMap extends Base {
     this.state = {
       activeView: JMap.JOURNEYS_VIEW,
       activePanel: JMap.MAP_PANEL,
-      currentJourneyId: null
+      currentJourneyId: null,
+      mapCenter: null,
+      mapZoom: null
     };
   }
 
   componentDidMount() {
-    this.props.journeyActions.getJourneyList().then(() => {
-    });
+    this.props.journeyActions.getJourneyList();
   }
 
   getPopout = () => {
@@ -74,10 +75,17 @@ class JMap extends Base {
     })
   };
 
-  showMap = () => {
-    this.setState({
+  showMap = journeyId => {
+    const state = {
       activeView: JMap.JOURNEYS_VIEW
-    });
+    };
+    if (journeyId) {
+      const journey = this.props.journey.journeys[journeyId];
+      const routeItem = journey.route_item;
+      state.mapCenter = routeItem.point;
+      state.mapZoom = 6;
+    }
+    this.setState(state);
   };
 
   onListButtonClick = () => {
@@ -94,6 +102,13 @@ class JMap extends Base {
     })
   };
 
+  onChangeMap = (center, zoom) => {
+    this.setState({
+      mapCenter: center,
+      mapZoom: zoom
+    });
+  };
+
   render() {
     const journeys = this.props.journey.filteredJourneyIds.map(id => {
       return this.props.journey.journeys[id];
@@ -108,9 +123,12 @@ class JMap extends Base {
           <JMapPanel
             id={JMap.MAP_PANEL}
             journeys={journeys}
+            center={this.state.mapCenter}
+            zoom={this.state.mapZoom}
             onItemClick={this.onItemClick}
             onListButtonClick={this.onListButtonClick}
             onAddButtonClick={this.clickAddCallback}
+            onChangeMap={this.onChangeMap}
           />
           <JDetailsPanel
             id={JMap.DETAILS_PANEL}

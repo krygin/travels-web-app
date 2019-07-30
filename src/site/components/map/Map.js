@@ -9,19 +9,23 @@ import config from 'shared/config';
 class Map extends BaseComponent {
   static defaultProps = {
     points: [],
+    defaultCenter: { lat: 33.4317826, lng: 18.0429884 },
+    defaultZoom: 1,
+    onChange: () => {},
     clickMarkerCallback: () => {}
   };
 
   static propTypes = {
     points: PropTypes.array,
+    defaultCenter: PropTypes.object,
+    defaultZoom: PropTypes.number,
+    center: PropTypes.object,
+    zoom: PropTypes.number,
+    onChange: PropTypes.func,
     clickMarkerCallback: PropTypes.func
   };
 
   render() {
-    const defaultProps = {
-      center: { lat: 33.4317826, lng: 18.0429884 },
-      zoom: 1
-    };
     const defaultOptions = () => ({
       streetViewControl: false,
       scaleControl: false,
@@ -44,10 +48,12 @@ class Map extends BaseComponent {
 
     return (
       <GoogleMap
-        defaultCenter={defaultProps.center}
-        defaultZoom={defaultProps.zoom}
+        defaultCenter={this.props.defaultCenter}
+        defaultZoom={this.props.defaultZoom}
         options={defaultOptions}
         center={this.props.center}
+        zoom={this.props.zoom}
+        onChange={data => this.props.onChange(data.center, data.zoom)}
         bootstrapURLKeys={{key: config.googleKey, libraries: 'places'}}
       >
         {markers}

@@ -13,7 +13,8 @@ import {
   Group,
   FormLayout,
   File,
-  Spinner, Textarea
+  Spinner,
+  Textarea
 } from "@vkontakte/vkui";
 import Icon24Camera from '@vkontakte/icons/dist/24/camera';
 import {journeyActions} from "store/entities/journey";

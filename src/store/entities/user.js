@@ -13,12 +13,13 @@ export const getCurrent = () => ({
   }
 });
 
-export const authActions = {
+export const actions = {
   getCurrent
 };
 
 const defaultState = {
-  isLoading: false,
+  isLoading: true,
+  error: null,
   current: null
 };
 
@@ -37,8 +38,10 @@ export const user = (state = defaultState, action) => {
 
     case GET_CURRENT_ERROR:
       return update(state, {
-        isLoading: {$set: false}
+        isLoading: {$set: false},
+        error: {$set: {body: action.payload}}
       });
+
     default: {
       return state;
     }

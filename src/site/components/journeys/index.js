@@ -111,6 +111,7 @@ class Journeys extends Base {
       return this.props.journey.journeys[id];
     });
     const state = this.props.state;
+    const currentJourney = this.props.journey.journeys[state.currentJourneyId];
 
     return (
       <Root activeView={state.activeView}>
@@ -131,7 +132,7 @@ class Journeys extends Base {
           />
           <JDetailsPanel
             id={DETAILS_PANEL}
-            journeyId={state.currentJourneyId}
+            journey={currentJourney}
             backCallback={this.backCallback}
           />
           <JListPanel

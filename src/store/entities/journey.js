@@ -24,7 +24,7 @@ export const createJourney = (positionId, beginDate, endDate, description) => ({
     body: {
       route_item: positionId,
       begin_date: beginDate,
-      endDate: endDate,
+      end_date: endDate,
       description: description
     },
     types: [CREATE, CREATE_SUCCESS, CREATE_ERROR]

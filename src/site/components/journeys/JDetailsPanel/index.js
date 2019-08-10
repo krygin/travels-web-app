@@ -109,12 +109,12 @@ class JDetailsPanel extends Base {
       const milestones = this.props.journey.milestones.map((m, index) => {
         return (
           <Group key={m.id} className="b-details-cell">
+            <div className="b-details-cell__description">{ m.description }</div>
             <div
               className="b-details-cell__image"
               style={{'backgroundImage': `url(${m.attachment.url})`}}
               onClick={() => viewer({urls, index})}
             />
-            <div className="b-details-cell__description">{ m.description }</div>
           </Group>
         )
       });
@@ -160,11 +160,15 @@ class JDetailsPanel extends Base {
               <Icon24Recent className="b-details-cell__icon b-details-cell__icon_recent"/>
               <div className="b-details-cell__value b-details-cell__value_recent">{this.convertDates()}</div>
             </div>
-            <div className="b-details-cell__description">{ this.props.journey.description }</div>
-            <div className="b-details-cell__join">
-              { this.state.isLoading && <Spinner size="large"/> }
-              { (!this.state.isLoading && canJoin) && <Button size="xl" onClick={this.join2Journey}>Присоединиться</Button>}
-            </div>
+            { this.props.journey.description &&
+              <div className="b-details-cell__description">{ this.props.journey.description }</div>
+            }
+            { this.state.isLoading && <Spinner className="b-details-cell__join" size="large"/> }
+            { (!this.state.isLoading && canJoin) &&
+              <div className="b-details-cell__join">
+                <Button size="xl" onClick={this.join2Journey}>Присоединиться</Button>
+              </div>
+            }
           </Group>
           { participants }
           { milestones }

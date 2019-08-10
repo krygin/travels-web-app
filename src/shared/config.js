@@ -10,6 +10,8 @@ export default {
   geoPositionCreate: 'geo/position_create',
   attachmentUpload: 'attachment/upload',
   journeyUpdateMilestones: 'journey/update_milestones',
+  journeyJoin: 'journey/join',
+  journeyGetParticipants: 'journey/get_participants',
 
   // clusterList: 'cluster.list',
 

@@ -47,16 +47,51 @@ export const updateMilestones = (journeyId, milestones) => ({
   }
 });
 
+export const JOIN2JOURNEY = 'JOIN2JOURNEY';
+export const JOIN2JOURNEY_SUCCESS = 'JOIN2JOURNEY_SUCCESS';
+export const JOIN2JOURNEY_ERROR = 'JOIN2JOURNEY_ERROR';
+
+export const join2journey = journeyId => ({
+  [CALL_API]: {
+    endpoint: conf.journeyJoin,
+    method: 'POST',
+    body: {
+      journey: journeyId
+    },
+    types: [JOIN2JOURNEY, JOIN2JOURNEY_SUCCESS, JOIN2JOURNEY_ERROR]
+  }
+});
+
+export const GET_PARTICIPANTS = 'GET_PARTICIPANTS';
+export const GET_PARTICIPANTS_SUCCESS = 'GET_PARTICIPANTS_SUCCESS';
+export const GET_PARTICIPANTS_ERROR = 'GET_PARTICIPANTS_ERROR';
+
+export const getParticipants = journeyId => ({
+  [CALL_API]: {
+    endpoint: conf.journeyGetParticipants,
+    body: {
+      params: {
+        journey: journeyId
+      }
+    },
+    additionalData: {journeyId},
+    types: [GET_PARTICIPANTS, GET_PARTICIPANTS_SUCCESS, GET_PARTICIPANTS_ERROR]
+  }
+});
+
 export const journeyActions = {
   getJourneyList,
   createJourney,
-  updateMilestones
+  updateMilestones,
+  join2journey,
+  getParticipants
 };
 
 const defaultState = {
   isListLoading: false,
   filteredJourneyIds: [],
-  journeys: {}
+  journeys: {},
+  participants: {}
 };
 
 export const journey = (state = defaultState, action) => {
@@ -92,6 +127,14 @@ export const journey = (state = defaultState, action) => {
     case UPDATE_MILESTONES_SUCCESS:
       return update(state, {
         journeys: {$merge: { [action.payload.id]: action.payload }}
+      });
+
+    case GET_PARTICIPANTS_SUCCESS:
+      const userIds = action.payload.map(item => item.id);
+      return update(state, {
+        participants: {$merge: {
+          [action.additionalData.journeyId]: userIds
+        }}
       });
 
     default: {

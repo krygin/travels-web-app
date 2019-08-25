@@ -114,17 +114,12 @@ export function reformatUser(user) {
   };
 }
 
-export function convertDateToString(value, iso) {
-  let mm = value.getMonth() + 1; // getMonth() is zero-based
-  mm = (mm > 9 ? '' : '0') + mm;
-
-  let dd = value.getDate();
-  dd = (dd > 9 ? '' : '0') + dd;
-
-  if (iso) {
-    return `${value.getFullYear()}-${mm}-${dd}`;
+export function dateToString(timeStamp, normalized) {
+  const date = new Date(timeStamp);
+  if (normalized) {
+    return date.toISOString().slice(0, 10)
   } else {
-    return `${dd}.${mm}.${value.getFullYear()}`;
+    return date.toLocaleDateString()
   }
 }
 

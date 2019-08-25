@@ -138,7 +138,7 @@ class Journeys extends Base {
           <JListPanel
             id={LIST_PANEL}
             journeys={journeys}
-            onItemClick={this.clickMarkerCallback}
+            onItemClick={this.onItemClick}
             onMapButtonClick={this.onMapButtonClick}
           />
         </View>

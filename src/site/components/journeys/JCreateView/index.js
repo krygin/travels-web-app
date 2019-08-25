@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Base from 'shared/components/Base';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {convertDateToString} from 'shared/utils/helpers';
+import {dateToString} from 'shared/utils/helpers';
 import './styles.scss';
 import config from 'shared/config';
 
@@ -113,9 +113,7 @@ class JCreateView extends Base {
     if (!dates) {
       return '';
     }
-    const begin = convertDateToString(dates[0]);
-    const end = convertDateToString(dates[1]);
-    return `${begin} - ${end}`;
+    return `${dateToString(dates[0].getTime())} - ${dateToString(dates[1].getTime())}`;
   };
 
   changeDescription = e => {
@@ -157,8 +155,8 @@ class JCreateView extends Base {
     }
 
     const dates = this.props.jCreate.dates;
-    const begin = convertDateToString(dates[0], true);
-    const end = convertDateToString(dates[1], true);
+    const begin = dateToString(dates[0].getTime(), true);
+    const end = dateToString(dates[1].getTime(), true);
     const description = this.props.jCreate.description;
     res = await this.props.journeyActions.createJourney(
       res.payload.id, begin, end, description

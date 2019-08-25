@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Base from 'shared/components/Base';
-import { convertDateToString } from "shared/utils/helpers";
+import {dateToString} from "shared/utils/helpers";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {journeyActions} from "store/entities/journey";
@@ -19,7 +19,7 @@ import {
   Avatar,
   Spinner
 } from '@vkontakte/vkui';
-import { platform, IOS } from '@vkontakte/vkui';
+import {platform, IOS} from '@vkontakte/vkui';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon28Place from '@vkontakte/icons/dist/28/place';
@@ -38,7 +38,8 @@ const mapDispatchToProps = dispatch => ({
 
 class JDetailsPanel extends Base {
   static defaultProps = {
-    backCallback: () => {}
+    backCallback: () => {
+    }
   };
 
   static propTypes = {
@@ -73,21 +74,19 @@ class JDetailsPanel extends Base {
   }
 
   convertDates = () => {
-    let begin = parseInt(this.props.journey.begin_date);
-    begin = begin ? new Date(begin * 1000) : null;
-    let end = parseInt(this.props.journey.end_date);
-    end = end ? new Date(end * 1000) : null;
+    let begin = this.props.journey.begin_date;
+    let end = this.props.journey.end_date;
 
     if (begin && end) {
-      begin = convertDateToString(begin);
-      end = convertDateToString(end);
+      begin = dateToString(begin * 1000);
+      end = dateToString(end * 1000);
       return `${begin} - ${end}`;
     }
     if (begin) {
-      return convertDateToString(begin);
+      return dateToString(begin);
     }
     if (end) {
-      return convertDateToString(end);
+      return dateToString(end);
     }
 
     return '';
@@ -109,7 +108,7 @@ class JDetailsPanel extends Base {
       const milestones = this.props.journey.milestones.map((m, index) => {
         return (
           <Group key={m.id} className="b-details-cell">
-            <div className="b-details-cell__description">{ m.description }</div>
+            <div className="b-details-cell__description">{m.description}</div>
             <div
               className="b-details-cell__image"
               style={{'backgroundImage': `url(${m.attachment.url})`}}
@@ -131,10 +130,10 @@ class JDetailsPanel extends Base {
                 return (
                   <Cell
                     key={userId}
-                    before={<Avatar src="https://pp.userapi.com/c625316/v625316293/347b7/DmD1VKYbwwI.jpg?ava=1" />}
+                    before={<Avatar src="https://pp.userapi.com/c625316/v625316293/347b7/DmD1VKYbwwI.jpg?ava=1"/>}
                   >
                     {user.last_name} {user.first_name}<br/>
-                    { isAuthor && <span className="b-participant__author">автор</span>}
+                    {isAuthor && <span className="b-participant__author">автор</span>}
                   </Cell>
                 );
               })}
@@ -160,36 +159,36 @@ class JDetailsPanel extends Base {
               <Icon24Recent className="b-details-cell__icon b-details-cell__icon_recent"/>
               <div className="b-details-cell__value b-details-cell__value_recent">{this.convertDates()}</div>
             </div>
-            { this.props.journey.description &&
-              <div className="b-details-cell__description">{ this.props.journey.description }</div>
+            {this.props.journey.description &&
+            <div className="b-details-cell__description">{this.props.journey.description}</div>
             }
-            { this.state.isLoading && <Spinner className="b-details-cell__join" size="large"/> }
-            { (!this.state.isLoading && canJoin) &&
-              <div className="b-details-cell__join">
-                <Button size="xl" onClick={this.join2Journey}>Присоединиться</Button>
-              </div>
+            {this.state.isLoading && <Spinner className="b-details-cell__join" size="large"/>}
+            {(!this.state.isLoading && canJoin) &&
+            <div className="b-details-cell__join">
+              <Button size="xl" onClick={this.join2Journey}>Присоединиться</Button>
+            </div>
             }
           </Group>
-          { participants }
-          { milestones }
+          {participants}
+          {milestones}
         </div>
       )
     }
 
     return (
-      <Panel id={ this.props.id }>
+      <Panel id={this.props.id}>
         <PanelHeader
           left={
-            <HeaderButton onClick={ this.props.backCallback }>
+            <HeaderButton onClick={this.props.backCallback}>
               {osname === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
             </HeaderButton>
           }
           addon={
-            <HeaderButton onClick={ this.props.backCallback }>Назад</HeaderButton>}
+            <HeaderButton onClick={this.props.backCallback}>Назад</HeaderButton>}
         >
           Путешествие
         </PanelHeader>
-        { content }
+        {content}
       </Panel>
     );
   }

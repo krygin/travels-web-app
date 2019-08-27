@@ -32,7 +32,6 @@ const defaultState = {
 export const user = (state = defaultState, action) => {
   switch (action.type) {
     case VK_AUTH: {
-      console.log(state);
       return update(state, {
         isLoading: {$set: true}
       });

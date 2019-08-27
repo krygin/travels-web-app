@@ -4,6 +4,7 @@ export default {
   root: '/api/',
 
   current: 'user',
+  vkAuth: 'app/vk',
 
   journeyCreate: 'journey/create',
   journeyList: 'journey/list',

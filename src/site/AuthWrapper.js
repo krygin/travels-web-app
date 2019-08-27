@@ -1,6 +1,7 @@
 import React from 'react';
 import Base from 'shared/components/Base';
-import { connect } from 'react-redux';
+import { connect as reduxConnect } from 'react-redux';
+import connect from '@vkontakte/vkui-connect';
 import { bindActionCreators } from 'redux';
 import { actions } from 'store/entities/user';
 
@@ -17,7 +18,24 @@ const mapDispatchToProps = dispatch => ({
 
 class AuthWrapper extends Base {
   componentDidMount() {
-    this.props.actions.getCurrent();
+    connect.send("VKWebAppInit", {});
+    connect.subscribe((e) => {
+      console.log(e);
+      switch (e.detail.type) {
+        case 'VKWebAppGetUserInfoResult':
+          this.setState({fetchedUser: e.detail.data});
+          break;
+        default:
+          break;
+      }
+    });
+    const searchParams = window.location.search
+      .slice(1)
+      .split('&')
+      .map(p => p.split('='))
+      .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {});
+    connect.send('VKWebAppGetUserInfo', {});
+    this.props.actions.vkAuth(searchParams);
   }
 
   render() {
@@ -31,4 +49,4 @@ class AuthWrapper extends Base {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthWrapper);
+export default reduxConnect(mapStateToProps, mapDispatchToProps)(AuthWrapper);

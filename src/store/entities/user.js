@@ -3,19 +3,23 @@ import {CALL_API} from 'store/api';
 import update from 'react-addons-update';
 import {GET_PARTICIPANTS_SUCCESS} from "./journey";
 
-export const GET_CURRENT = 'USER_GET_CURRENT';
-export const GET_CURRENT_SUCCESS = 'USER_GET_CURRENT_SUCCESS';
-export const GET_CURRENT_ERROR = 'USER_GET_CURRENT_ERROR';
+export const VK_AUTH = 'VK_AUTH';
+export const VK_AUTH_SUCCESS = 'VK_AUTH_SUCCESS';
+export const VK_AUTH_FAILURE = 'VK_AUTH_FAILURE';
 
-export const getCurrent = () => ({
+
+export const vkAuth = (accessToken) => ({
   [CALL_API]: {
-    endpoint: conf.current,
-    types: [GET_CURRENT, GET_CURRENT_SUCCESS, GET_CURRENT_ERROR]
+    endpoint: conf.vkAuth,
+    body: {
+      params: accessToken
+    },
+    types: [VK_AUTH, VK_AUTH_SUCCESS, VK_AUTH_FAILURE]
   }
 });
 
 export const actions = {
-  getCurrent
+  vkAuth
 };
 
 const defaultState = {
@@ -27,12 +31,14 @@ const defaultState = {
 
 export const user = (state = defaultState, action) => {
   switch (action.type) {
-    case GET_CURRENT:
+    case VK_AUTH: {
+      console.log(state);
       return update(state, {
         isLoading: {$set: true}
       });
+    }
 
-    case GET_CURRENT_SUCCESS:
+    case VK_AUTH_SUCCESS:
       const user = action.payload.user;
       return update(state, {
         isLoading: {$set: false},
@@ -40,7 +46,7 @@ export const user = (state = defaultState, action) => {
         users: {$merge: {[user.id]: user}}
       });
 
-    case GET_CURRENT_ERROR:
+    case VK_AUTH_FAILURE:
       return update(state, {
         isLoading: {$set: false},
         error: {$set: {body: action.payload}}

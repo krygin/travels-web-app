@@ -1,5 +1,4 @@
 import React from 'react';
-import connect from '@vkontakte/vkui-connect';
 import BaseComponent from 'shared/components/Base';
 import '@vkontakte/vkui/dist/vkui.css';
 import 'shared/styles/Base.scss';
@@ -26,18 +25,7 @@ export default class extends BaseComponent {
   }
 
   componentDidMount() {
-    connect.send("VKWebAppInit", {});
-    connect.subscribe((e) => {
-      switch (e.detail.type) {
-        case 'VKWebAppGetUserInfoResult':
-          this.setState({fetchedUser: e.detail.data});
-          break;
 
-        default:
-          break;
-      }
-    });
-    connect.send('VKWebAppGetUserInfo', {});
   }
 
   onStoryChange = e => {

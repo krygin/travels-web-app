@@ -1,0 +1,13 @@
+version: '3.2'
+services:
+  front:
+    network_mode: host
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    command: npm start
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "10888:10888"

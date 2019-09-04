@@ -1,7 +1,7 @@
 import React from 'react';
 import Base from 'shared/components/Base';
 import { connect as reduxConnect } from 'react-redux';
-import connect from '@vkontakte/vkui-connect';
+import connect from '@vkontakte/vk-connect';
 import { bindActionCreators } from 'redux';
 import { actions } from 'store/entities/user';
 

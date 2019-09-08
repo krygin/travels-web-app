@@ -13,6 +13,7 @@ export default {
   journeyUpdateMilestones: 'journey/update_milestones',
   journeyJoin: 'journey/join',
   journeyGetParticipants: 'journey/get_participants',
+  getUserProfile(userId) { return `user/profile/${userId}/`},
 
   // clusterList: 'cluster.list',
 

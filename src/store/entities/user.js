@@ -7,8 +7,12 @@ export const VK_AUTH = 'VK_AUTH';
 export const VK_AUTH_SUCCESS = 'VK_AUTH_SUCCESS';
 export const VK_AUTH_FAILURE = 'VK_AUTH_FAILURE';
 
+export const GET_USER_PROFILE = 'GET_USER_PROFILE';
+export const GET_USER_PROFILE_SUCCESS = 'GET_USER_PROFILE_SUCCESS';
+export const GET_USER_PROFILE_FAILURE = 'GET_USER_PROFILE_FAILURE';
 
-export const vkAuth = (accessToken) => ({
+
+const vkAuth = (accessToken) => ({
   [CALL_API]: {
     endpoint: conf.vkAuth,
     body: {
@@ -18,8 +22,17 @@ export const vkAuth = (accessToken) => ({
   }
 });
 
+const getUserProfile = (userId) => ({
+  [CALL_API]: {
+    endpoint: conf.getUserProfile(userId),
+    types: [GET_USER_PROFILE, GET_USER_PROFILE_SUCCESS, GET_USER_PROFILE_FAILURE]
+  }
+
+});
+
 export const actions = {
-  vkAuth
+  vkAuth,
+  getUserProfile
 };
 
 const defaultState = {
@@ -38,14 +51,31 @@ export const user = (state = defaultState, action) => {
     }
 
     case VK_AUTH_SUCCESS:
-      const user = action.payload.user;
+      const currentUser = action.payload.user;
       return update(state, {
         isLoading: {$set: false},
-        current: {$set: user},
-        users: {$merge: {[user.id]: user}}
+        current: {$set: currentUser},
+        users: {$merge: {[currentUser.id]: currentUser}}
       });
 
     case VK_AUTH_FAILURE:
+      return update(state, {
+        isLoading: {$set: false},
+        error: {$set: {body: action.payload}}
+      });
+    case GET_USER_PROFILE:
+      return update(state, {
+        isLoading: {$set: true}
+      });
+
+    case GET_USER_PROFILE_SUCCESS:
+      const user = action.payload.user;
+      return update(state, {
+        isLoading: {$set: false},
+        users: {$merge: {[user.id]: user}}
+      });
+
+    case GET_USER_PROFILE_FAILURE:
       return update(state, {
         isLoading: {$set: false},
         error: {$set: {body: action.payload}}

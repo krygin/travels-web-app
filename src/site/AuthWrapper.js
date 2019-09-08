@@ -39,9 +39,6 @@ class AuthWrapper extends Base {
   }
 
   render() {
-    if (this.props.user.isLoading) {
-      return <Spinner size="large" />
-    }
     if (this.props.user.error) {
       return <div>Something gone wrong</div>;
     }

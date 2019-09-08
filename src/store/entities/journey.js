@@ -6,9 +6,14 @@ export const GET_LIST = 'GET_JOURNEY_LIST';
 export const GET_LIST_SUCCESS = 'GET_JOURNEY_LIST_SUCCESS';
 export const GET_LIST_ERROR = 'GET_JOURNEY_LIST_ERROR';
 
-export const getJourneyList = () => ({
+export const getJourneyList = (params = null) => ({
   [CALL_API]: {
     endpoint: conf.journeyList,
+    body: {
+      params: {
+        userId: (params || {}).userId
+      }
+    },
     types: [GET_LIST, GET_LIST_SUCCESS, GET_LIST_ERROR]
   }
 });

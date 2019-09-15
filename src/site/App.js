@@ -22,6 +22,7 @@ const PROFILE = 'App_PROFILE';
 const NOTIFICATIONS = 'App_NOTIFICATIONS';
 
 const mapStateToProps = state => ({
+  current: state.entities.user.current,
   n: state.entities.notification,
 });
 
@@ -39,8 +40,10 @@ class App extends BaseComponent {
     };
   }
 
-  componentDidMount() {
-    this.props.nActions.getNotificationList();
+  componentWillReceiveProps(nextProps) {
+    if (!this.props.current && nextProps.current) {
+      this.props.nActions.getNotificationList();
+    }
   }
 
   onStoryChange = e => {

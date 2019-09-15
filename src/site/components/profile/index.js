@@ -14,6 +14,7 @@ import {bindActionCreators} from "redux";
 import {actions} from 'store/entities/user';
 import {journeyActions} from 'store/entities/journey';
 import JCell from "../journeys/JCell";
+import './styles.scss';
 
 const mapStateToProps = state => ({
   users: state.entities.user.users,
@@ -36,6 +37,8 @@ class Profile extends React.Component {
   }
 
   render() {
+    const current = this.props.users[this.props.current.id];
+
     return (
       <Root id={this.props.id} activeView="profileView">
         <View id="profileView" activePanel="profilePanel">
@@ -44,11 +47,11 @@ class Profile extends React.Component {
             <Group title="О путешественнике">
               <List>
                 <Cell
-                  photo={this.props.users[this.props.current.id].profile_image}
-                  before={<Avatar src={this.props.users[this.props.current.id].profile_image} size={80}/>}
+                  photo={current.profile_image}
+                  before={<Avatar src={current.profile_image} size={80}/>}
                   size="l"
                 >
-                  {this.props.users[this.props.current.id].first_name} {this.props.users[this.props.current.id].last_name}
+                  <div className="b-user__title">{current.first_name} {current.last_name}</div>
                 </Cell>
                 <Cell multiline>
                   Команда ВКонтакте Команда ВКонтакте Команда ВКонтакте Команда ВКонтакте
@@ -65,7 +68,10 @@ class Profile extends React.Component {
             </Group>
             <Group title="Путешествия">
               <List>
-                { this.props.userJourneysIds && this.props.userJourneysIds.map(journeyId => <JCell journey={this.props.journeys[journeyId]} onClick={()=>{}} key={journeyId}/>)}
+                { this.props.userJourneysIds &&
+                  this.props.userJourneysIds.map(journeyId =>
+                    <JCell journey={this.props.journeys[journeyId]} onClick={()=>{}} key={journeyId}/>)
+                }
               </List>
             </Group>
           </Panel>

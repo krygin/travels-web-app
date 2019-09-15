@@ -14,6 +14,7 @@ export default {
   journeyJoin: 'journey/join',
   journeyGetParticipants: 'journey/get_participants',
   getUserProfile(userId) { return `user/profile/${userId}/`},
+  getNotificationList: 'notification/list',
 
   // clusterList: 'cluster.list',
 

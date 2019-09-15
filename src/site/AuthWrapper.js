@@ -5,8 +5,6 @@ import connect from '@vkontakte/vk-connect';
 import { bindActionCreators } from 'redux';
 import { actions } from 'store/entities/user';
 
-import {Spinner} from "@vkontakte/vkui";
-
 
 const mapStateToProps = state => ({
   user: state.entities.user

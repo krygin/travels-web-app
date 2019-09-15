@@ -130,7 +130,7 @@ class JDetailsPanel extends Base {
                 return (
                   <Cell
                     key={userId}
-                    before={<Avatar src="https://pp.userapi.com/c625316/v625316293/347b7/DmD1VKYbwwI.jpg?ava=1"/>}
+                    before={<Avatar src={user.profile_image}/>}
                   >
                     {user.last_name} {user.first_name}<br/>
                     {isAuthor && <span className="b-participant__author">автор</span>}

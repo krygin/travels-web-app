@@ -8,14 +8,29 @@ import {ConfigProvider, Epic, Tabbar, TabbarItem} from '@vkontakte/vkui';
 import AuthWrapper from "./AuthWrapper";
 import Journeys from "./components/journeys";
 import Profile from "./components/profile";
+import Notification from "./components/notifications";
 import Icon28Place from '@vkontakte/icons/dist/28/place';
 import Icon28User from '@vkontakte/icons/dist/28/user';
+import Icon28Notification from '@vkontakte/icons/dist/28/notification';
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {actions} from "store/entities/notification";
+
 
 const JOURNEYS = 'App_JOURNEYS';
 const PROFILE = 'App_PROFILE';
+const NOTIFICATIONS = 'App_NOTIFICATIONS';
+
+const mapStateToProps = state => ({
+  n: state.entities.notification,
+});
+
+const mapDispatchToProps = dispatch => ({
+  nActions: bindActionCreators(actions, dispatch),
+});
 
 
-export default class extends BaseComponent {
+class App extends BaseComponent {
   constructor(props) {
     super(props);
 
@@ -25,7 +40,7 @@ export default class extends BaseComponent {
   }
 
   componentDidMount() {
-
+    this.props.nActions.getNotificationList();
   }
 
   onStoryChange = e => {
@@ -33,6 +48,11 @@ export default class extends BaseComponent {
   };
 
   render() {
+    const notifications = this.props.n.notificationIds.map(
+      id => this.props.n.notifications[id]
+    );
+    const newNotifications = notifications.filter(item => item.is_viewed === 0);
+
     return (
       <AuthWrapper>
         <ConfigProvider>
@@ -54,13 +74,25 @@ export default class extends BaseComponent {
               >
                 <Icon28User/>
               </TabbarItem>
+              <TabbarItem
+                onClick={this.onStoryChange}
+                selected={this.state.activeStory === NOTIFICATIONS}
+                data-story={NOTIFICATIONS}
+                text="Уведомления"
+                label={newNotifications.length !== 0 ? newNotifications.length : null}
+              >
+                <Icon28Notification/>
+              </TabbarItem>
             </Tabbar>
           }>
             <Journeys id={JOURNEYS}/>
             <Profile id={PROFILE}/>
+            <Notification id={NOTIFICATIONS}/>
           </Epic>
         </ConfigProvider>
       </AuthWrapper>
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
